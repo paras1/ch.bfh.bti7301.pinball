@@ -1,3 +1,8 @@
 
 .DS_Store
+
 *.class
+
+P1_Pinball-android/gen/*
+
+P1_Pinball-android/bin/*
