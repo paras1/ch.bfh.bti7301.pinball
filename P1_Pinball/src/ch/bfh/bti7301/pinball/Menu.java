@@ -1,5 +1,8 @@
 package ch.bfh.bti7301.pinball;
 
+import ch.bfh.bti7301.pinball.screens.GameArea;
+import ch.bfh.bti7301.pinball.screens.PinballGame;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
@@ -12,13 +15,21 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+/**
+ * The Menu class is the entry point of the game and draws a table with three buttons
+ * to start the game, view highscore or edit gamearea.
+ * 
+ *
+ * @author Dominik Reubi(reubd1@bfh.ch)
+ * @version 1.0
+ */
 public class Menu implements Screen
 {
 	Stage stage;
 	SpriteBatch batch;
 	PinballGame game;
 	TextButton startGameButton;
-	TextButton optionsButton;
+	TextButton highscoreButton;
 	TextButton exitButton;
 
 	public Menu(PinballGame game) {
@@ -51,7 +62,7 @@ public class Menu implements Screen
 		Table table = new Table(Assets.skin);
 
 		startGameButton = new TextButton("New Game", Assets.skin);
-		optionsButton = new TextButton("Highscore", Assets.skin);
+		highscoreButton = new TextButton("Highscore", Assets.skin);
 		exitButton = new TextButton("Editor", Assets.skin);
 
 		
@@ -70,7 +81,7 @@ public class Menu implements Screen
 //		table.debug(); 
 		table.add(startGameButton).width(150).height(50);
 		table.row();
-		table.add(optionsButton).width(150).height(50).padTop(10);
+		table.add(highscoreButton).width(150).height(50).padTop(10);
 		table.row();
 		table.add(exitButton).width(150).height(50).padTop(10);
 

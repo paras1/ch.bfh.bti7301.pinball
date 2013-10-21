@@ -1,0 +1,33 @@
+	{
+		"name": "Default",
+		"width": 20,
+		"height": 30,
+		
+		"delegate": "Field1Delegate",
+		"targetTimeRatio": 2.3,
+		"gravity": 9.81,
+		
+		"numballs": 3,
+		"ballradius": 1.0,
+		"ballcolor": [22, 22, 224],
+		"launch": {"position": [50.0, 2.5], "velocity": [0, 90], "deadzone": [18.8, 0, 20, 1.4]},
+		
+		"elements": [
+			"Strings in this section are treated as comments and ignored.",
+			"All field elements except for flippers are defined in this section.",
+			"Each element is a JSON object with a mandatory class property to indicate type",
+			"and type=specific additional attributes. The element classes are defined",
+			"in the com.dozingcatsoftware.bouncy.element package.", 
+			
+		"bumpers below top lanes",
+			{"class": "BumperElement", "radius": 2.35, "position": [30.5, 50], "kick": 3, "color": [0, 0, 224], "score": 500},
+			{"class": "BumperElement", "radius": 1.85, "position": [40.3, 61.2], "kick": 3, "color": [0, 0, 224], "score": 500},
+			{"class": "BumperElement", "radius": 1.85, "position": [35.5, 65.5], "kick": 3, "color": [0, 0, 224], "score": 500},
+			"purple bumper is extra points",
+			{"class": "BumperElement", "radius": 1.40, "position": [14.5, 63.5], "kick": 2.5, "color": [192, 0, 192], "score": 1000},
+			
+		
+		],
+		          
+        
+	}	
