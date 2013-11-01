@@ -52,10 +52,8 @@ public class Physic {
 	public static Body createLine(World world, float x, float y, Vector2 direction) {
 		
 		
-		PolygonShape line = new PolygonShape();
 		ChainShape chain = new ChainShape();
 		chain.createChain(new Vector2[]{direction, new Vector2(0,0)});
-//		line.setAsBox(direction.x, direction.y);
 		
 		FixtureDef fdef = new FixtureDef();
 		fdef.shape = chain;

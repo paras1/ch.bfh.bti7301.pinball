@@ -26,6 +26,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
@@ -33,6 +34,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
+import com.sun.net.httpserver.Filter.Chain;
 
 /**
  * This Class draws the GameArea and its elements with their physic
@@ -129,10 +131,16 @@ public class GameArea implements Screen {
 		return ballSprite;
     }
     
-    public void setSlingshot(Float posx, Float posy, Vector2 direction){
+    public void setSlingshot(SlingshotElement slingshot){
     	
+    	Map slingshotMap = slingshot.getParameters();
+    	List<Number> position = (List<Number>) slingshotMap.get("position");
+    	List<Number> length = (List<Number>) slingshotMap.get("length");
+    	Vector2 vLength =  new Vector2(length.get(0).floatValue(), length.get(1).floatValue());
+    	int kick = (Integer)slingshotMap.get("kick");
     	
-    	slingshotBody = Physic.createLine(world, posx, posy, direction);
+    	slingshotBody = Physic.createLine(world, position.get(0).floatValue(), position.get(1).floatValue(), vLength);
+    	slingshotBody.setUserData(slingshot);
     }
     
     /*
@@ -278,6 +286,8 @@ public class GameArea implements Screen {
 					if(fixtureB.getBody().getUserData() instanceof HashMap){
 						HashMap bumperMap = (HashMap)fixtureB.getBody().getUserData();
 						Iterator iter = bumperMap.entrySet().iterator(); 
+						
+						
 						while (iter.hasNext()) {
 							Map.Entry mEntry = (Map.Entry) iter.next();
 							BumperElement bElement = (BumperElement)mEntry.getKey();
@@ -289,31 +299,58 @@ public class GameArea implements Screen {
 							float ix = ballpos.x - thisPos.x;
 							float iy = ballpos.y - thisPos.y;
 							float mag = (float)Math.sqrt(ix*ix + iy*iy);
+							
 							int kick = (Integer) bElement.getParameters().get("kick");
 							float scale = kick / mag;
 							fixtureA.getBody().applyLinearImpulse(new Vector2(ix*scale, iy*scale), fixtureA.getBody().getWorldCenter());
 						}
 					}
-					if(fixtureA.getBody().getUserData() instanceof HashMap){
-						HashMap bumperMap = (HashMap)fixtureA.getBody().getUserData();
-						Iterator iter = bumperMap.entrySet().iterator(); 
-						while (iter.hasNext()) {
-							Map.Entry mEntry = (Map.Entry) iter.next();
-							BumperElement bElement = (BumperElement)mEntry.getKey();
-//							bElement.handleCollision(fixtureB.getBody());
-							Gdx.app.log("Score: ", bElement.getScore()+"");
-							
-							
-							Vector2 ballpos = fixtureB.getBody().getWorldCenter();
-							Vector2 thisPos = fixtureA.getBody().getPosition();
-							float ix = ballpos.x - thisPos.x;
-							float iy = ballpos.y - thisPos.y;
-							float mag = (float)Math.sqrt(ix*ix + iy*iy);
-							int kick = (Integer) bElement.getParameters().get("kick");
-							float scale = kick / mag;
-							fixtureB.getBody().applyLinearImpulse(new Vector2(ix*scale, iy*scale), fixtureB.getBody().getWorldCenter());
-						}
-					}
+//					if(fixtureB.getBody().getUserData() instanceof SlingshotElement){
+//						SlingshotElement slingshot = (SlingshotElement)fixtureB.getBody().getUserData();
+//						int kick  = (Integer)slingshot.getParameters().get("kick");
+//						
+//						Vector2 ballpos = fixtureA.getBody().getWorldCenter();
+//						Vector2 thisPos = fixtureB.getBody().getPosition();
+//						float ix = ballpos.x - thisPos.x;
+//						float iy = ballpos.y - thisPos.y;
+//						float mag = (float)Math.sqrt(ix*ix + iy*iy);
+//						
+//						float scale = kick / mag;
+//						fixtureA.getBody().applyLinearImpulse(new Vector2(ix*scale, iy*scale), fixtureA.getBody().getWorldCenter());
+//					}
+//					if(fixtureA.getBody().getUserData() instanceof HashMap){
+//						HashMap bumperMap = (HashMap)fixtureA.getBody().getUserData();
+//						Iterator iter = bumperMap.entrySet().iterator(); 
+//						while (iter.hasNext()) {
+//							Map.Entry mEntry = (Map.Entry) iter.next();
+//							BumperElement bElement = (BumperElement)mEntry.getKey();
+////							bElement.handleCollision(fixtureB.getBody());
+//							Gdx.app.log("Score: ", bElement.getScore()+"");
+//							
+//							
+//							Vector2 ballpos = fixtureB.getBody().getWorldCenter();
+//							Vector2 thisPos = fixtureA.getBody().getPosition();
+//							float ix = ballpos.x - thisPos.x;
+//							float iy = ballpos.y - thisPos.y;
+//							float mag = (float)Math.sqrt(ix*ix + iy*iy);
+//							int kick = (Integer) bElement.getParameters().get("kick");
+//							float scale = kick / mag;
+//							fixtureB.getBody().applyLinearImpulse(new Vector2(ix*scale, iy*scale), fixtureB.getBody().getWorldCenter());
+//						}
+//					}
+//					if(fixtureA.getBody().getUserData() instanceof SlingshotElement){
+//						SlingshotElement slingshot = (SlingshotElement)fixtureA.getBody().getUserData();
+//						int kick  = (Integer)slingshot.getParameters().get("kick");
+//						
+//						Vector2 ballpos = fixtureB.getBody().getWorldCenter();
+//						Vector2 thisPos = fixtureA.getBody().getPosition();
+//						float ix = ballpos.x - thisPos.x;
+//						float iy = ballpos.y - thisPos.y;
+//						float mag = (float)Math.sqrt(ix*ix + iy*iy);
+//						
+//						float scale = kick / mag;
+//						fixtureB.getBody().applyLinearImpulse(new Vector2(ix*scale, iy*scale), fixtureB.getBody().getWorldCenter());
+//					}
             }
 //            Gdx.app.log("contact", "end of contact list");
         }
@@ -324,7 +361,7 @@ public class GameArea implements Screen {
 			ballBody.setLinearVelocity(new Vector2(velocity.get(0), velocity.get(1)));
 		}
         
-        debugRenderer.render(world, camera.combined);  
+//        debugRenderer.render(world, camera.combined);  
    
 	}
 
@@ -366,15 +403,10 @@ public class GameArea implements Screen {
 	        	List<Number> position = (List<Number>) bumperMap.get("position");
 	        	setBumpers(bumper, position.get(0).floatValue(), position.get(1).floatValue(), radius.floatValue());
 	        }
-//	        if(elements.get(i) instanceof SlingshotElement){
-//	        	slingshot = (SlingshotElement)elements.get(i);
-//	        	Map slingshotMap = slingshot.getParameters();
-//	        	List<Number> position = (List<Number>) slingshotMap.get("position");
-//	        	List<Number> length = (List<Number>) slingshotMap.get("length");
-//	        	Vector2 vLength =  new Vector2(length.get(0).floatValue(), length.get(1).floatValue());
-//	        	
-//	            setSlingshot(position.get(0).floatValue(), position.get(1).floatValue(), vLength);
-//	        }
+	        if(elements.get(i) instanceof SlingshotElement){
+	        	slingshot = (SlingshotElement)elements.get(i);
+	            setSlingshot(slingshot);
+	        }
         }
         debugRenderer = new Box2DDebugRenderer();
 	}
