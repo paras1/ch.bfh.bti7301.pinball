@@ -1,5 +1,7 @@
 package ch.bfh.bti7301.pinball.elements;
 
+import static ch.bfh.bti7301.pinball.util.NumFormatUtil.asFloat;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -62,10 +64,4 @@ public class BumperElement extends FieldElement {
 		}
 	}
 
-
-
-	public static float asFloat(Object obj, float defvalue) {
-		if (obj instanceof Number) return ((Number)obj).floatValue();
-		return defvalue;
-	}
 }
