@@ -1,5 +1,7 @@
 package ch.bfh.bti7301.pinball;
 
+import static ch.bfh.bti7301.pinball.util.NumFormatUtil.asFloat;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -162,8 +164,4 @@ public class FieldLayout {
 		return values.get(key);
 	}
 	
-	public static float asFloat(Object obj, float defvalue) {
-		if (obj instanceof Number) return ((Number)obj).floatValue();
-		return defvalue;
-	}
 }
