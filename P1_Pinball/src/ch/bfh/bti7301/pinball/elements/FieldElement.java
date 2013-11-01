@@ -60,6 +60,7 @@ public abstract class FieldElement {
 		if (params.containsKey("score")) {
 			this.score = ((Number)params.get("score")).longValue();
 		}
+		this.finishCreate(params, world);
 		
 	}
 	
@@ -70,7 +71,9 @@ public abstract class FieldElement {
 	public abstract List<Body> getBodies();
 
 
-
+	/** Must be overridden by subclasses, which should perform any setup required after creation.
+	 */
+	public abstract void finishCreate(Map params, World world);
 	
 	/** Returns this element's ID as specified in the JSON definition, or null if the ID is not specified.
 	 */

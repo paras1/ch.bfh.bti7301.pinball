@@ -24,6 +24,24 @@
 			{"class": "SlingshotElement", "position": [12.7, 13.5], "length": [-7.7, 14.5], "kick": 80},
 		
 		],
-		          
+		  
+		  "flippers": [
+        	{
+        		"position": [6.35, 2.2],
+        		"length": 2.5,
+        		"minangle": -20,
+        		"maxangle": 20,
+        		"upspeed": 7,
+        		"downspeed": 3
+        	},
+        	{
+        		"position": [12.35, 2.2],
+        		"length": -2.5,
+        		"minangle": -20,
+        		"maxangle": 20,
+        		"upspeed": 7,
+        		"downspeed": 3
+        	}
+        ]        
         
 	}	
