@@ -73,5 +73,28 @@ public class Physic {
 		return body;
 	
 	}
+	
+	public static Body createWall (World world, float xmin, float ymin, float xmax, float ymax, float angle, float restitution) {
+		float cx = (xmin + xmax) / 2;
+		float cy = (ymin + ymax) / 2;
+		float hx = (xmax - xmin) / 2;
+		float hy = (ymax - ymin) / 2;
+		if (hx < 0) hx = -hx;
+		if (hy < 0) hy = -hy;
+		PolygonShape wallshape = new PolygonShape();
+		wallshape.setAsBox(hx, hy, new Vector2(0f, 0f), angle);
+
+		FixtureDef fdef = new FixtureDef();
+		fdef.shape = wallshape;
+		fdef.density = 1.0f;
+		if (restitution > 0) fdef.restitution = restitution;
+
+		BodyDef bd = new BodyDef();
+		bd.position.set(cx, cy);
+		Body wall = world.createBody(bd);
+		wall.createFixture(fdef);
+		wall.setType(BodyDef.BodyType.StaticBody);
+		return wall;
+	}
 
 }
