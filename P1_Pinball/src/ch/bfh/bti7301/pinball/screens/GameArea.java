@@ -1,5 +1,6 @@
 package ch.bfh.bti7301.pinball.screens;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,7 @@ import aurelienribon.bodyeditor.BodyEditorLoader;
 import ch.bfh.bti7301.pinball.FieldLayout;
 import ch.bfh.bti7301.pinball.Physic;
 import ch.bfh.bti7301.pinball.elements.BumperElement;
+import ch.bfh.bti7301.pinball.elements.SlingshotElement;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -24,7 +26,12 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 
 /**
@@ -56,6 +63,7 @@ public class GameArea implements Screen {
 	Pixmap pixmap;
 	private Body ballBody;
 	private Body bumperBody;
+	private Body slingshotBody;
     
 	private PinballGame game;
 
@@ -84,7 +92,7 @@ public class GameArea implements Screen {
  		backgroundModel = world.createBody(bd);
 
  		//Create the body fixture automatically by using the loader.
- 		loader.attachFixture(backgroundModel, "background", fd, BACKGROUND_WIDTH);
+ 		loader.attachFixture(backgroundModel, "gamearea", fd, BACKGROUND_WIDTH);
  	}
      
      private void createBackgroundSprite() {
@@ -121,15 +129,26 @@ public class GameArea implements Screen {
 		return ballSprite;
     }
     
+    public void setSlingshot(Float posx, Float posy, Vector2 direction){
+    	
+    	
+    	slingshotBody = Physic.createLine(world, posx, posy, direction);
+    }
+    
     /*
      * This Method draws the bumper by calling drawBumper() and its corresponding physic by calling Phisic.createCircle
      * with the parameters x and y for the position and the radius
      */
-    public  void setBumpers(Float posx, Float posy, Float radius) {
+    public  void setBumpers(BumperElement bumper, Float posx, Float posy, Float radius) {
+    	
+    	HashMap userData = new HashMap();
+    	userData.put(bumper, drawBumper(posx, posy, radius));
+    	
 
 		bumperBody = Physic.createCircle(world, posx, posy, radius, true);
 		bumperBody.setBullet(true);
-		bumperBody.setUserData(drawBumper(posx, posy, radius));
+		
+		bumperBody.setUserData(userData);
 //		VPSoundpool.playBall();
     }
     
@@ -150,7 +169,33 @@ public class GameArea implements Screen {
     	
     }
     
+    private void createCollisionListener() {
+        world.setContactListener(new ContactListener() {
 
+            @Override
+            public void beginContact(Contact contact) {
+                Fixture fixtureA = contact.getFixtureA();
+                Fixture fixtureB = contact.getFixtureB();
+//                Gdx.app.log("beginContact", "between " + fixtureA.toString() + " and " + fixtureB.toString());
+            }
+
+            @Override
+            public void endContact(Contact contact) {
+                Fixture fixtureA = contact.getFixtureA();
+                Fixture fixtureB = contact.getFixtureB();
+//                Gdx.app.log("endContact", "between " + fixtureA.toString() + " and " + fixtureB.toString());
+            }
+
+            @Override
+            public void preSolve(Contact contact, Manifold oldManifold) {
+            }
+
+            @Override
+            public void postSolve(Contact contact, ContactImpulse impulse) {
+            }
+
+        });
+    }
 
 			
 
@@ -192,6 +237,8 @@ public class GameArea implements Screen {
         
         backgroundSprite.draw(batcher);
         
+        
+        HashMap map = new HashMap();
         //get Bodies of Box2d World and find bodies with userdata(sprite)
 		Iterator<Body> itBody = world.getBodies();
 		while(itBody.hasNext()){
@@ -202,9 +249,74 @@ public class GameArea implements Screen {
 				sprite.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
 				sprite.draw(batcher);
 			}
+			if (body.getUserData() instanceof HashMap){
+				HashMap bumperMap = (HashMap)body.getUserData();
+				Iterator iter = bumperMap.entrySet().iterator();
+				 
+				while (iter.hasNext()) {
+					Map.Entry mEntry = (Map.Entry) iter.next();
+					Sprite sprite = (Sprite) mEntry.getValue();
+					sprite.setPosition(body.getPosition().x - sprite.getWidth()/2, body.getPosition().y - sprite.getHeight()/2);
+					sprite.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
+					sprite.draw(batcher);
+					map.put(mEntry.getKey(), mEntry.getValue());
+				}
+			}
+			
 		}
 		batcher.end();
 		
+		
+		int numContacts = world.getContactCount();
+        if (numContacts > 0) {
+//            Gdx.app.log("contact", "start of contact list");
+            for (Contact contact : world.getContactList()) {
+                Fixture fixtureA = contact.getFixtureA();
+                Fixture fixtureB = contact.getFixtureB();
+//                Gdx.app.log("contact", "between " + fixtureA.toString() + " and " + fixtureB.toString());
+				 
+					if(fixtureB.getBody().getUserData() instanceof HashMap){
+						HashMap bumperMap = (HashMap)fixtureB.getBody().getUserData();
+						Iterator iter = bumperMap.entrySet().iterator(); 
+						while (iter.hasNext()) {
+							Map.Entry mEntry = (Map.Entry) iter.next();
+							BumperElement bElement = (BumperElement)mEntry.getKey();
+//							bElement.handleCollision(fixtureA.getBody());
+							Gdx.app.log("Score: ", bElement.getScore()+"");
+							
+							Vector2 ballpos = fixtureA.getBody().getWorldCenter();
+							Vector2 thisPos = fixtureB.getBody().getPosition();
+							float ix = ballpos.x - thisPos.x;
+							float iy = ballpos.y - thisPos.y;
+							float mag = (float)Math.sqrt(ix*ix + iy*iy);
+							int kick = (Integer) bElement.getParameters().get("kick");
+							float scale = kick / mag;
+							fixtureA.getBody().applyLinearImpulse(new Vector2(ix*scale, iy*scale), fixtureA.getBody().getWorldCenter());
+						}
+					}
+					if(fixtureA.getBody().getUserData() instanceof HashMap){
+						HashMap bumperMap = (HashMap)fixtureA.getBody().getUserData();
+						Iterator iter = bumperMap.entrySet().iterator(); 
+						while (iter.hasNext()) {
+							Map.Entry mEntry = (Map.Entry) iter.next();
+							BumperElement bElement = (BumperElement)mEntry.getKey();
+//							bElement.handleCollision(fixtureB.getBody());
+							Gdx.app.log("Score: ", bElement.getScore()+"");
+							
+							
+							Vector2 ballpos = fixtureB.getBody().getWorldCenter();
+							Vector2 thisPos = fixtureA.getBody().getPosition();
+							float ix = ballpos.x - thisPos.x;
+							float iy = ballpos.y - thisPos.y;
+							float mag = (float)Math.sqrt(ix*ix + iy*iy);
+							int kick = (Integer) bElement.getParameters().get("kick");
+							float scale = kick / mag;
+							fixtureB.getBody().applyLinearImpulse(new Vector2(ix*scale, iy*scale), fixtureB.getBody().getWorldCenter());
+						}
+					}
+            }
+//            Gdx.app.log("contact", "end of contact list");
+        }
 
 		//if the screen is touched, the ballbody will be accelerated(launched)
     	List<Float> velocity = layout.getLaunchVelocity();
@@ -212,7 +324,7 @@ public class GameArea implements Screen {
 			ballBody.setLinearVelocity(new Vector2(velocity.get(0), velocity.get(1)));
 		}
         
-//        debugRenderer.render(world, camera.combined);  
+        debugRenderer.render(world, camera.combined);  
    
 	}
 
@@ -222,6 +334,7 @@ public class GameArea implements Screen {
 		
 
         createBackgroundPhysic();
+        createCollisionListener();
         
     	//setup these 3 for rendering- sprite batch will render out textures, and pixmaps allow you to draw on them
 		batcher = new SpriteBatch();
@@ -243,6 +356,7 @@ public class GameArea implements Screen {
        
         List elements = layout.getFieldElements();
         BumperElement bumper = new BumperElement();
+        SlingshotElement slingshot =  new SlingshotElement();
         
         for(int i = 0; i<elements.size(); i++){
 	        if(elements.get(i) instanceof BumperElement){
@@ -250,8 +364,17 @@ public class GameArea implements Screen {
 	           	Map bumperMap = bumper.getParameters();
 	        	Double radius = (Double)bumperMap.get("radius");
 	        	List<Number> position = (List<Number>) bumperMap.get("position");
-	        	setBumpers(position.get(0).floatValue(), position.get(1).floatValue(), radius.floatValue());
+	        	setBumpers(bumper, position.get(0).floatValue(), position.get(1).floatValue(), radius.floatValue());
 	        }
+//	        if(elements.get(i) instanceof SlingshotElement){
+//	        	slingshot = (SlingshotElement)elements.get(i);
+//	        	Map slingshotMap = slingshot.getParameters();
+//	        	List<Number> position = (List<Number>) slingshotMap.get("position");
+//	        	List<Number> length = (List<Number>) slingshotMap.get("length");
+//	        	Vector2 vLength =  new Vector2(length.get(0).floatValue(), length.get(1).floatValue());
+//	        	
+//	            setSlingshot(position.get(0).floatValue(), position.get(1).floatValue(), vLength);
+//	        }
         }
         debugRenderer = new Box2DDebugRenderer();
 	}

@@ -1,9 +1,12 @@
 package ch.bfh.bti7301.pinball;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 /**
@@ -42,6 +45,33 @@ public class Physic {
 		return body;
 		
 		
+	}
+	
+	/** Creates a line object with the given position.
+	 */
+	public static Body createLine(World world, float x, float y, Vector2 direction) {
+		
+		
+		PolygonShape line = new PolygonShape();
+		ChainShape chain = new ChainShape();
+		chain.createChain(new Vector2[]{direction, new Vector2(0,0)});
+//		line.setAsBox(direction.x, direction.y);
+		
+		FixtureDef fdef = new FixtureDef();
+		fdef.shape = chain;
+		
+		fdef.density = 1.0f;
+		fdef.friction = 0.3f;
+		fdef.restitution = 0.6f;
+		
+		BodyDef bd = new BodyDef();
+		bd.allowSleep = true;
+		bd.position.set(x, y);
+		Body body = world.createBody(bd);
+		body.createFixture(fdef);
+		
+		return body;
+	
 	}
 
 }
