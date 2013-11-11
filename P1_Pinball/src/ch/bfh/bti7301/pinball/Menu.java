@@ -1,6 +1,7 @@
 package ch.bfh.bti7301.pinball;
 
 import ch.bfh.bti7301.pinball.screens.GameArea;
+import ch.bfh.bti7301.pinball.screens.HighscoreScreen;
 import ch.bfh.bti7301.pinball.screens.PinballGame;
 
 import com.badlogic.gdx.Gdx;
@@ -72,6 +73,18 @@ public class Menu implements Screen
 				// TODO Auto-generated method stub
 				game.setScreen(new GameArea(game));
 
+				return true;
+			}
+
+		});
+		highscoreButton.addListener(new InputListener() {
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
+				// TODO Auto-generated method stub
+				HighscoreScreen hsc = new HighscoreScreen(game);
+				hsc.ReadFile();
+				game.setScreen(hsc);
+				
 				return true;
 			}
 
