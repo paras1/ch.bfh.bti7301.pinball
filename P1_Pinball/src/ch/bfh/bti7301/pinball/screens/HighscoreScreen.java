@@ -64,7 +64,7 @@ public class HighscoreScreen implements Screen {
 	public void ReadFile(){
 		
 		String[][] dataArray = new String[5][2];
-		String file = "/P1_Pinball-desktop/assets/data/highscorelist.txt";
+		String file = "/Users/bfh/git/ch.bfh.bti7301.pinball/P1_Pinball-android/assets/data/highscorelist.txt";
 		
 		try{
 		InputStream ips = new FileInputStream(file); 
@@ -73,7 +73,8 @@ public class HighscoreScreen implements Screen {
         String line;
         Character c;
         String cString = "";
-        for (int i = 0; i < 5; i++){
+        int i = 0;
+        for (i = 0; i < 5; i++){
        
         	if (br.readLine() != null){
         		int j = 0;
@@ -95,6 +96,7 @@ public class HighscoreScreen implements Screen {
         	        j++;
         		}
         		dataArray[i][1] = cString;
+        		System.out.println(cString);
         		c = null;
         		cString = "";
         	}
@@ -107,7 +109,7 @@ public class HighscoreScreen implements Screen {
 		 catch (Exception e){
 		        System.out.println(e.toString());
 		    }
-		System.out.println(dataArray);
+		//System.out.println(dataArray);
 	}
 
 }

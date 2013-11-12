@@ -104,7 +104,7 @@ public class GameArea implements Screen {
 
     	 backgroundSprite = new Sprite(backgroundTexture);
     	 backgroundSprite.setPosition(0, 0);
-    	 backgroundSprite.setSize(506/10, 900/10 );
+    	 backgroundSprite.setSize(506/10, 890/10 );
      }
 
 
