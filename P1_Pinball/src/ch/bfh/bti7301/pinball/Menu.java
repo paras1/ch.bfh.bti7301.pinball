@@ -12,6 +12,10 @@ import ch.bfh.bti7301.pinball.screens.PinballGame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -36,6 +40,11 @@ public class Menu implements Screen
 	TextButton startGameButton;
 	TextButton highscoreButton;
 	TextButton exitButton;
+	private Texture backgroundTexture;
+	private Sprite backgroundSprite;
+	private SpriteBatch batcher;
+    private OrthographicCamera camera;  
+
 
 	public Menu(PinballGame game) {
 		this.game = game;
@@ -134,13 +143,22 @@ public class Menu implements Screen
 		// TODO Auto-generated method stub
 
 	}
-	public void loadBackground(){
-		try {
-			Image image = new Image();
-			Drawable  drawable  = Drawable.createFromPath(Assets.background);
-			image.setImageDrawable(drawable);	
-		} catch (IOException e) {
-		}
+	public void createBackgroundSprite(){
+	 backgroundTexture = new Texture(Gdx.files.internal("data/back.png"));
+	 backgroundTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+
+	 backgroundSprite = new Sprite(backgroundTexture);
+	 backgroundSprite.setPosition(0, 0);
+	 backgroundSprite.setSize(506/10, 890/10 );
+		batcher.setProjectionMatrix(camera.combined);
+        batcher.begin();
+     backgroundSprite.draw(batcher);
+
+	}
+	public void disposeObjects() {
+		//dispose any object you created to free up the memory
+		backgroundTexture.dispose();
+		batcher.dispose();
 	}
 }
 
