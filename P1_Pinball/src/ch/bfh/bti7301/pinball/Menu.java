@@ -1,20 +1,24 @@
 package ch.bfh.bti7301.pinball;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
 import ch.bfh.bti7301.pinball.screens.GameArea;
 import ch.bfh.bti7301.pinball.screens.HighscoreScreen;
 import ch.bfh.bti7301.pinball.screens.PinballGame;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 /**
  * The Menu class is the entry point of the game and draws a table with three buttons
@@ -82,7 +86,12 @@ public class Menu implements Screen
 					int pointer, int button) {
 				// TODO Auto-generated method stub
 				HighscoreScreen hsc = new HighscoreScreen(game);
-				hsc.ReadFile();
+				try {
+					hsc.ReadFile();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				game.setScreen(hsc);
 				
 				return true;
@@ -124,6 +133,14 @@ public class Menu implements Screen
 	public void dispose() {
 		// TODO Auto-generated method stub
 
+	}
+	public void loadBackground(){
+		try {
+			Image image = new Image();
+			Drawable  drawable  = Drawable.createFromPath(Assets.background);
+			image.setImageDrawable(drawable);	
+		} catch (IOException e) {
+		}
 	}
 }
 
