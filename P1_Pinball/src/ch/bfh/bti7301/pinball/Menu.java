@@ -1,19 +1,28 @@
 package ch.bfh.bti7301.pinball;
 
-import ch.bfh.bti7301.pinball.screens.GameArea;
-import ch.bfh.bti7301.pinball.screens.PinballGame;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+
+import ch.bfh.bti7301.pinball.screens.GameArea;
+import ch.bfh.bti7301.pinball.screens.HighscoreScreen;
+import ch.bfh.bti7301.pinball.screens.PinballGame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 /**
  * The Menu class is the entry point of the game and draws a table with three buttons
@@ -31,6 +40,11 @@ public class Menu implements Screen
 	TextButton startGameButton;
 	TextButton highscoreButton;
 	TextButton exitButton;
+	private Texture backgroundTexture;
+	private Sprite backgroundSprite;
+	private SpriteBatch batcher;
+    private OrthographicCamera camera;  
+
 
 	public Menu(PinballGame game) {
 		this.game = game;
@@ -76,6 +90,23 @@ public class Menu implements Screen
 			}
 
 		});
+		highscoreButton.addListener(new InputListener() {
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
+				// TODO Auto-generated method stub
+				HighscoreScreen hsc = new HighscoreScreen(game);
+				try {
+					hsc.ReadFile();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				game.setScreen(hsc);
+				
+				return true;
+			}
+
+		});
 
 		table.setFillParent(true);
 //		table.debug(); 
@@ -111,6 +142,23 @@ public class Menu implements Screen
 	public void dispose() {
 		// TODO Auto-generated method stub
 
+	}
+	public void createBackgroundSprite(){
+	 backgroundTexture = new Texture(Gdx.files.internal("data/back.png"));
+	 backgroundTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+
+	 backgroundSprite = new Sprite(backgroundTexture);
+	 backgroundSprite.setPosition(0, 0);
+	 backgroundSprite.setSize(506/10, 890/10 );
+		batcher.setProjectionMatrix(camera.combined);
+        batcher.begin();
+     backgroundSprite.draw(batcher);
+
+	}
+	public void disposeObjects() {
+		//dispose any object you created to free up the memory
+		backgroundTexture.dispose();
+		batcher.dispose();
 	}
 }
 

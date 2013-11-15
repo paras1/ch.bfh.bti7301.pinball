@@ -98,7 +98,7 @@ public class GameArea implements Screen {
 
     	 backgroundSprite = new Sprite(backgroundTexture);
     	 backgroundSprite.setPosition(0, 0);
-    	 backgroundSprite.setSize(506/10, 900/10 );
+    	 backgroundSprite.setSize(506/10, 890/10 );
      }
 
 
@@ -139,6 +139,7 @@ public class GameArea implements Screen {
 	public void resize(int width, int height) {
 	}
 
+	
 	@Override
 	public void pause() {
 	}
