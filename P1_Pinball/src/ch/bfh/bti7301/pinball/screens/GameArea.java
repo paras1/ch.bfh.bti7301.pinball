@@ -1,21 +1,19 @@
 package ch.bfh.bti7301.pinball.screens;
 
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import aurelienribon.bodyeditor.BodyEditorLoader;
 import ch.bfh.bti7301.pinball.FieldLayout;
+import ch.bfh.bti7301.pinball.GameState;
 import ch.bfh.bti7301.pinball.Physic;
 import ch.bfh.bti7301.pinball.elements.BumperElement;
-import ch.bfh.bti7301.pinball.elements.SlingshotElement;
+import ch.bfh.bti7301.pinball.elements.FlipperElement;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -26,15 +24,8 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.ChainShape;
-import com.badlogic.gdx.physics.box2d.Contact;
-import com.badlogic.gdx.physics.box2d.ContactImpulse;
-import com.badlogic.gdx.physics.box2d.ContactListener;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
-import com.sun.net.httpserver.Filter.Chain;
 
 /**
  * This Class draws the GameArea and its elements with their physic
@@ -57,6 +48,7 @@ public class GameArea implements Screen {
 	private Body backgroundModel;
 	private Texture backgroundTexture;
 	private Sprite backgroundSprite;
+	
 
  
 	//things needed to draw
@@ -67,12 +59,16 @@ public class GameArea implements Screen {
 	private Body slingshotBody;
     
 	private PinballGame game;
+	
+	private boolean isTouchable;
+	String level;
 
 
 
     // constructor to keep a reference to the main Game class
-     public GameArea(PinballGame game){
+     public GameArea(PinballGame game, String level){
              this.game = game;
+             this.level = level;
      }
      
      private void createBackgroundPhysic() {
@@ -123,7 +119,7 @@ public class GameArea implements Screen {
      */
     public Sprite getBallSprite(){
 		Sprite ballSprite = new Sprite(new Texture("data/kugel1.png"));
-		ballSprite.setSize(3, 3);
+		ballSprite.setSize(3f, 3f);
 		ballSprite.setOrigin(ballSprite.getWidth()/2, ballSprite.getHeight()/2);
 		ballSprite.setPosition(ballBody.getPosition().x - ballSprite.getWidth()/2, ballBody.getPosition().y - ballSprite.getHeight()/2);
 		ballSprite.setRotation(ballBody.getAngle() * MathUtils.radiansToDegrees);
@@ -159,6 +155,8 @@ public class GameArea implements Screen {
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);  
         world.step(BOX_STEP, BOX_VELOCITY_ITERATIONS, BOX_POSITION_ITERATIONS); 
         
+        List flippers = layout.getFlipperElements();
+        List elements = layout.getFieldElements();
          
 		//start the batcher, so we would want to do all of our draw calls between batcher.begin and .end
 		batcher.setProjectionMatrix(camera.combined);
@@ -167,13 +165,21 @@ public class GameArea implements Screen {
         //Draw the background
         backgroundSprite.draw(batcher);
         
-        List elements = layout.getFieldElements();
         
         //Draw the bumpers
         for(int i = 0; i<elements.size(); i++){
 	        if(elements.get(i) instanceof BumperElement){
 	        	BumperElement bump = (BumperElement)elements.get(i);
 	        	bump.getSprite().draw(batcher);
+	        }
+        }
+        
+    	//Draw the flippers
+        for(int i = 0; i<flippers.size(); i++){
+	        if(flippers.get(i) instanceof FlipperElement){
+	        	FlipperElement flipper = (FlipperElement)flippers.get(i);
+	        	flipper.drawFlipper().draw(batcher);
+//	        	flipper.getSprite().draw(batcher);
 	        }
         }
 
@@ -183,23 +189,58 @@ public class GameArea implements Screen {
 		batcher.end();
 		
 		//find objects that collide in our pinballworld during rendering process
-		Physic.doCollisionDetection(world);
+//		Physic.doCollisionDetection(world);
 
 
 		//if the screen is touched, the ballbody will be accelerated(launched)
-    	List<Float> velocity = layout.getLaunchVelocity();
-		if(Gdx.input.isTouched()){
-			ballBody.setLinearVelocity(new Vector2(velocity.get(0), velocity.get(1)));
-		}
-        
+    	List<Float> velocity = layout.getLaunchVelocity(); 
+    	
+    	if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT)){
+    		activateFlippers(flippers, true);
+    	}
+    	else{
+    		activateFlippers(flippers, false);
+    	}
+    	
+    	
+    	if(isTouchable){
+			if(Gdx.input.isTouched()){
+				//check if the right bottom place of the screen is touched(ball start position)
+				if(Gdx.input.getX()>480 && Gdx.input.getY()>860){
+					ballBody.setLinearVelocity(new Vector2(velocity.get(0), velocity.get(1)));
+					isTouchable = false;
+				}
+			}
+    	}
+    	//check if ball is in "deadzone" position of ball < 0 in y screen axis
+        if(ballBody.getPosition().y < 0){
+        	world.destroyBody(ballBody);
+        	GameState.getInstance().doNextBall();
+        	if(GameState.getInstance().isGameInProgress()){
+        		setBall();
+        	}
+        	else{
+        		gameOver();
+        	}
+        	isTouchable = true;
+        }
         debugRenderer.render(world, camera.combined);  
    
 	}
+	
+	public void activateFlippers(List flippers, boolean activated){
+		for(int i = 0; i<flippers.size(); i++){
+	        if(flippers.get(i) instanceof FlipperElement){
+	        	FlipperElement flipper = (FlipperElement)flippers.get(i);
+	        		flipper.setFlipperActivated(activated);
+	        }
+		}
+    }
 
 	@Override
 	public void show() {
 		world = new World(new Vector2(0.0f, -20f), true);
-		
+		isTouchable = true;
 
         createBackgroundPhysic();
         Physic.createCollisionListener(world);
@@ -212,10 +253,11 @@ public class GameArea implements Screen {
         camera.position.set(camera.viewportWidth * .5f, camera.viewportHeight * .5f, 0f);  
         camera.update();  
         
-        layout = FieldLayout.layoutForLevel("Level1",world);
+        layout = FieldLayout.layoutForLevel(level,world);
         
 
         createBackgroundSprite();
+        GameState.getInstance().startNewGame();
         setBall();
         
         debugRenderer = new Box2DDebugRenderer();
@@ -225,6 +267,11 @@ public class GameArea implements Screen {
 	public void hide() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	private void gameOver(){
+		Gdx.app.log("gamestate: ", "GAMEOVER!!!");
+		Gdx.app.log("endscore: ", GameState.getInstance().getScore()+"");
 	}
 
 }

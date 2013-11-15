@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import ch.bfh.bti7301.pinball.elements.FieldElement;
+import ch.bfh.bti7301.pinball.elements.FlipperElement;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -34,7 +35,7 @@ public class FieldLayout {
 	
 	static Map readFieldLayout(String  name) {
 		try {
-			String assetPath = "tables/table" + name + ".json";
+			String assetPath = "tables/"+ name;
 			
 			FileHandle fh = Gdx.files.internal("data/"+assetPath);
 			InputStream fin = fh.read();
@@ -65,6 +66,7 @@ public class FieldLayout {
 	}
 	
 	List<FieldElement> fieldElements = new ArrayList<FieldElement>();
+	List<FlipperElement> flippers;
 	float width;
 	float height;
 	List<Integer> ballColor;
@@ -100,8 +102,14 @@ public class FieldLayout {
 		this.ballColor = (layoutMap.containsKey("ballcolor")) ? (List<Integer>)layoutMap.get("ballcolor") : DEFAULT_BALL_COLOR;
 		this.allParameters = layoutMap;
 		
+		flippers = addFieldElements(layoutMap, "flippers", FlipperElement.class, world);
+
 		
 		addFieldElements(layoutMap, "elements", null, world);
+	}
+	
+	public List<FlipperElement> getFlipperElements() {
+		return flippers;
 	}
 
 

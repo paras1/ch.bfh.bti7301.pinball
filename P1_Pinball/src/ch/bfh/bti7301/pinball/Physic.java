@@ -27,6 +27,8 @@ import com.badlogic.gdx.physics.box2d.World;
  */
 public class Physic {
 	
+	private static GameState gameState = GameState.getInstance();
+	
 	/** Creates a circle object with the given position and radius.
 	 */
 	public static Body createCircle(World world, float x, float y, float radius, boolean isStatic) {
@@ -36,7 +38,7 @@ public class Physic {
 		
 		FixtureDef fdef = new FixtureDef();
 		fdef.shape = sd;
-		fdef.density = 1.0f;
+		fdef.density = 0.7f;
 		fdef.friction = 0.3f;
 		fdef.restitution = 0.6f;
 		
@@ -104,60 +106,52 @@ public class Physic {
 		return wall;
 	}
 	
-	public static void doCollisionDetection(World world){
-		int numContacts = world.getContactCount();
-        if (numContacts > 0) {
-//            Gdx.app.log("contact", "start of contact list");
-            for (Contact contact : world.getContactList()) {
-                Fixture fixtureA = contact.getFixtureA();
-                Fixture fixtureB = contact.getFixtureB();
-				 
-					if(fixtureB.getBody().getUserData() instanceof BumperElement){
-					
-							BumperElement bElement = (BumperElement)fixtureB.getBody().getUserData();
-							Gdx.app.log("Score: ", bElement.getScore()+"");
-							
-							bElement.handleCollision(fixtureA.getBody());
-						
-					}
-					if(fixtureA.getBody().getUserData() instanceof BumperElement){
-						
-						BumperElement bElement = (BumperElement)fixtureA.getBody().getUserData();
-						Gdx.app.log("Score: ", bElement.getScore()+"");
-						
-						bElement.handleCollision(fixtureB.getBody());
-	
-					}
-					if(fixtureB.getBody().getUserData() instanceof SlingshotElement){
-						
-						SlingshotElement slingshotElement = (SlingshotElement)fixtureB.getBody().getUserData();
-						
-						slingshotElement.handleCollision(fixtureA.getBody());
-					
-					}
-					if(fixtureA.getBody().getUserData() instanceof SlingshotElement){
-						
-						SlingshotElement slingshotElement = (SlingshotElement)fixtureA.getBody().getUserData();
-						
-						slingshotElement.handleCollision(fixtureB.getBody());
-	
-					}
-            }
-        }
-	}
     public static void createCollisionListener(World world) {
         world.setContactListener(new ContactListener() {
+	
+	            @Override
+	            public void beginContact(Contact contact) {
+		                Fixture fixtureA = contact.getFixtureA();
+		                Fixture fixtureB = contact.getFixtureB();
+		                
+		                if(fixtureB.getBody().getUserData() instanceof BumperElement){
+							
+							BumperElement bElement = (BumperElement)fixtureB.getBody().getUserData();
+							Gdx.app.log("Score: ", bElement.getScore()+"");
+							gameState.addScore(bElement.getScore());
+						
+							bElement.handleCollision(fixtureA.getBody());
+						
+						}
+						if(fixtureA.getBody().getUserData() instanceof BumperElement){
+							
+							BumperElement bElement = (BumperElement)fixtureA.getBody().getUserData();
+							Gdx.app.log("Score: ", bElement.getScore()+"");
+							gameState.addScore(bElement.getScore());							
 
-            @Override
-            public void beginContact(Contact contact) {
-                Fixture fixtureA = contact.getFixtureA();
-                Fixture fixtureB = contact.getFixtureB();
+							bElement.handleCollision(fixtureB.getBody());
+			
+						}
+						if(fixtureB.getBody().getUserData() instanceof SlingshotElement){
+							Gdx.app.log("Slingshot touched: ", "");
+							SlingshotElement slingshotElement = (SlingshotElement)fixtureB.getBody().getUserData();
+							
+							slingshotElement.handleCollision(fixtureA.getBody());
+						
+						}
+						if(fixtureA.getBody().getUserData() instanceof SlingshotElement){
+							Gdx.app.log("Slingshot touched: ", "");
+							SlingshotElement slingshotElement = (SlingshotElement)fixtureA.getBody().getUserData();
+							
+							slingshotElement.handleCollision(fixtureB.getBody());
+			
+						}
+	            
+			
             }
 
             @Override
             public void endContact(Contact contact) {
-                Fixture fixtureA = contact.getFixtureA();
-                Fixture fixtureB = contact.getFixtureB();
             }
 
             @Override

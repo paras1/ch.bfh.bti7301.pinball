@@ -11,6 +11,10 @@ import java.util.Map;
 import ch.bfh.bti7301.pinball.Physic;
 import ch.bfh.bti7301.pinball.screens.GameArea;
 
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -26,6 +30,10 @@ public class FlipperElement extends FieldElement {
 	public Body anchorBody;
 	public RevoluteJoint joint;
 	RevoluteJointDef jointDef;
+	
+	Texture texture;
+	Pixmap pixmap;
+	Sprite flipperSprite;
 
 	float flipperLength;
 	float upspeed, downspeed;
@@ -48,10 +56,10 @@ public class FlipperElement extends FieldElement {
 		// flipper needs to be slightly extended past anchorBody to rotate correctly
 		float ext = (this.flipperLength > 0) ? -0.05f : +0.05f;
 		// width larger than 0.12 slows rotation?
-		this.flipperBody = Physic.createWall(world, cx + ext, cy - 0.12f, cx + flipperLength, cy + 0.12f, 0f, 0f);
+		this.flipperBody = Physic.createWall(world, cx + ext, cy - 0.12f, cx + flipperLength, cy + 0.7f, 0f, 0f);
 		flipperBody.setType(BodyDef.BodyType.DynamicBody);
 		flipperBody.setBullet(true);
-		flipperBody.getFixtureList().get(0).setDensity(5.0f);
+		flipperBody.getFixtureList().get(0).setDensity(0.3f);
 
 		jointDef = new RevoluteJointDef();
 		jointDef.initialize(anchorBody, flipperBody, new Vector2(this.cx, this.cy));
@@ -60,11 +68,13 @@ public class FlipperElement extends FieldElement {
 		// counterclockwise rotations are positive, so flip angles for flippers extending left
 		jointDef.lowerAngle = (this.flipperLength > 0) ? this.minangle : -this.maxangle;
 		jointDef.upperAngle = (this.flipperLength > 0) ? this.maxangle : -this.minangle;
-		jointDef.maxMotorTorque = 1000f;
+		jointDef.maxMotorTorque = 100000f;
 
 		this.joint = (RevoluteJoint)world.createJoint(jointDef);
+		
+		drawFlipper();
 
-		flipperBodySet = (List<Body>) Collections.singleton(flipperBody);
+//		flipperBodySet = (List<Body>) Collections.singleton(flipperBody);
 		this.setEffectiveSpeed(-this.downspeed); // force flipper to bottom when field is first created
 	}
 
@@ -130,22 +140,30 @@ public class FlipperElement extends FieldElement {
 	public Body getAnchorBody () {
 		return anchorBody;
 	}
-
-// FLIPPER Platziermethode. -> Vielleicht kannst du was anfangen damit
-	
-//	public void draw () {
-//		// draw single line segment from anchor point
-//		Vector2 position = anchorBody.getPosition();
-//		float angle = joint.getJointAngle();
-//		// HACK: angle can briefly get out of range, always draw between min and max
-//		if (angle < jointDef.lowerAngle) angle = jointDef.lowerAngle;
-//		if (angle > jointDef.upperAngle) angle = jointDef.upperAngle;
-//		float x1 = position.x;
-//		float y1 = position.y;
-//		float x2 = position.x + flipperLength * (float)Math.cos(angle);
-//		float y2 = position.y + flipperLength * (float)Math.sin(angle);
-//
-//
-//	}
+	   
+	public Sprite drawFlipper(){
+		pixmap = new Pixmap(16, 16, Pixmap.Format.RGBA8888);
+		texture = new Texture(pixmap);
+ 		//draw a yellow circle
+ 		pixmap.setColor(1, 1, 0,1);
+ 		pixmap.fillRectangle(0, 0,18,2);
+// 		pixmap.fillCircle(256/2,256/2,256/2);
+  
+ 		texture.draw(pixmap, 0, 0);
+ 		texture.bind();
+ 		
+ 		flipperSprite = new Sprite(texture);
+// 		flipperSprite.setPosition(cx, cy);
+ 		flipperSprite.setSize(9f,7f);
+ 		
+ 		flipperSprite.setOrigin(flipperSprite.getWidth()/2, flipperSprite.getHeight()/2);
+ 		flipperSprite.setPosition(flipperBody.getPosition().x - flipperSprite.getWidth()/2, flipperBody.getPosition().y - flipperSprite.getHeight());
+ 		flipperSprite.setRotation(flipperBody.getAngle() * MathUtils.radiansToDegrees);
+ 		
+		return flipperSprite;
+	}
+	public Sprite getSprite(){
+		return flipperSprite;
+	}
 }
 

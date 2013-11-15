@@ -21,8 +21,8 @@ import com.badlogic.gdx.physics.box2d.World;
  */
 public class SlingshotElement extends FieldElement {
 
-	Body pegBody;
-	List pegBodySet;
+	Body slingshotBody;
+	List slingshotBodySet;
 	
 	float px, py;
 	float lx, ly;
@@ -41,27 +41,29 @@ public class SlingshotElement extends FieldElement {
 		
 		Vector2 vLength =  new Vector2(lx, ly);
     	
-		pegBody = Physic.createLine(world, px, py, vLength);
-		pegBody.setUserData(this);
+		slingshotBody = Physic.createLine(world, px, py, vLength);
+		slingshotBody.setUserData(this);
+		slingshotBody.setBullet(true);
 
-		pegBodySet = Collections.singletonList(pegBody);
+		slingshotBodySet = Collections.singletonList(slingshotBody);
 	}
 	
 	@Override
 	public List<Body> getBodies() {
-		return pegBodySet;
+		return slingshotBodySet;
 	}
 	
 	Vector2 impulseForBall(Body ball) {
 		if (this.kick <= 0.01f) return null;
 		// compute unit vector from center of peg to ball, and scale by kick value to get impulse
 		Vector2 ballpos = ball.getWorldCenter();
-		Vector2 thisPos = pegBody.getPosition();
+		Vector2 thisPos = slingshotBody.getPosition();
 		float ix = ballpos.x - thisPos.x;
 		float iy = ballpos.y - thisPos.y;
 		float mag = (float)Math.sqrt(ix*ix + iy*iy);
 		float scale = this.kick / mag;
 		return new Vector2(ix*scale, iy*scale);
+//		return null;
 	}
 
 	
