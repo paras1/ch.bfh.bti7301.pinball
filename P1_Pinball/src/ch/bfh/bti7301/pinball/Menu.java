@@ -8,6 +8,7 @@ import javax.imageio.ImageIO;
 
 import ch.bfh.bti7301.pinball.screens.GameArea;
 import ch.bfh.bti7301.pinball.screens.HighscoreScreen;
+import ch.bfh.bti7301.pinball.screens.LevelScreen;
 import ch.bfh.bti7301.pinball.screens.PinballGame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -84,7 +85,7 @@ public class Menu implements Screen
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
 				// TODO Auto-generated method stub
-				game.setScreen(new GameArea(game));
+				game.setScreen(new LevelScreen(game));
 
 				return true;
 			}

@@ -11,14 +11,20 @@ import ch.bfh.bti7301.pinball.elements.FlipperElement;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -26,6 +32,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
 /**
  * This Class draws the GameArea and its elements with their physic
@@ -48,6 +55,11 @@ public class GameArea implements Screen {
 	private Body backgroundModel;
 	private Texture backgroundTexture;
 	private Sprite backgroundSprite;
+	
+	private String scoreText;
+	BitmapFont scoreFont;
+	String playerName;
+	private boolean isInputDone = false;
 	
 
  
@@ -163,10 +175,32 @@ public class GameArea implements Screen {
 		batcher.setProjectionMatrix(camera.combined);
         batcher.begin();
         
+        
+        scoreText = "Score: "+GameState.getInstance().getScore();
+
         //Draw the background
         backgroundSprite.draw(batcher);
+        scoreFont.setScale(0.1f);
+      //setting linear filtering
+        scoreFont.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+//        scoreFont.draw(batcher, scoreText, 23, 87);
         
         
+        
+        Texture texture = new Texture(Gdx.files.internal("data/default.png"));
+        texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+        BitmapFont font = new BitmapFont(Gdx.files.internal("data/default.fnt"), new TextureRegion(texture), false);
+        font.setScale(0.17f, 0.094f);
+        CharSequence str = "Score: ";
+
+        font.draw(batcher, str, 23,85);
+        
+//        CharSequence str = "Score: ";
+//        scoreFont = new BitmapFont();
+//        scoreFont.setScale(0.1f);
+//        scoreFont.setColor(Color.RED);
+//        scoreFont.draw(batcher, str, 23, 87);
+
         //Draw the bumpers
         for(int i = 0; i<elements.size(); i++){
 	        if(elements.get(i) instanceof BumperElement){
@@ -215,13 +249,15 @@ public class GameArea implements Screen {
     	}
     	//check if ball is in "deadzone" position of ball < 0 in y screen axis
         if(ballBody.getPosition().y < 0){
-        	world.destroyBody(ballBody);
         	GameState.getInstance().doNextBall();
         	if(GameState.getInstance().isGameInProgress()){
+            	world.destroyBody(ballBody);
         		setBall();
         	}
         	else{
+        		if(isInputDone==false){
         		gameOver();
+        		}
         	}
         	isTouchable = true;
         }
@@ -242,7 +278,11 @@ public class GameArea implements Screen {
 	public void show() {
 		world = new World(new Vector2(0.0f, -20f), true);
 		isTouchable = true;
-
+		
+		scoreText = "score: 0";
+	    scoreFont = new BitmapFont(Gdx.files.internal("data/default.fnt"), Gdx.files.internal("data/default.png"),false);
+	    scoreFont.setColor(Color.RED);
+	    
         createBackgroundPhysic();
         Physic.createCollisionListener(world);
         
@@ -256,7 +296,7 @@ public class GameArea implements Screen {
         
         layout = FieldLayout.layoutForLevel(level,world);
         
-
+        GameState.getInstance().setTotalBalls(layout.getNumberOfBalls());
         createBackgroundSprite();
         GameState.getInstance().startNewGame();
         setBall();
@@ -273,6 +313,21 @@ public class GameArea implements Screen {
 	private void gameOver(){
 		Gdx.app.log("gamestate: ", "GAMEOVER!!!");
 		Gdx.app.log("endscore: ", GameState.getInstance().getScore()+"");
+		Gdx.input.getTextInput(new TextInputListener() {
+			@Override
+			public void input (String text) {
+				playerName = text;
+				FileHandle file = Gdx.files.local("data/highscore.txt");
+				file.writeString("\n"+GameState.getInstance().getScore()+","+playerName, true);
+				game.setScreen(new Menu(game));
+			}
+
+			@Override
+			public void canceled () {
+				playerName = "default";
+			}
+		}, "enter your name", "");
+		isInputDone = true;
 	}
 
 }

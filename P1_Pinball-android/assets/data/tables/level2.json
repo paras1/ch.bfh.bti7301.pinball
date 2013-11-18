@@ -2,11 +2,7 @@
 		"name": "Default",
 		"width": 20,
 		"height": 30,
-		
 		"delegate": "Field1Delegate",
-		"targetTimeRatio": 2.3,
-		"gravity": 9.81,
-		
 		"numballs": 3,
 		"ballradius": 1,
 		"ballcolor": [22, 22, 224],
@@ -14,7 +10,7 @@
 		
 		"elements": [
 		"bumpers below top lanes",
-			{"class": "BumperElement", "radius": 2.35, "position": [19.5, 60], "kick": 6.0, "color": [0, 0, 224], "score": 5},
+			{"class": "BumperElement", "radius": 2.35, "position": [19.5, 60], "kick": 60.0, "color": [0, 0, 224], "score": 5},
 			"purple bumper is extra points",
 			{"class": "BumperElement", "radius": 1.40, "position": [24.5, 63.5], "kick": 80, "color": [192, 0, 192], "score": 10},
 			"slingshots",
@@ -41,5 +37,4 @@
         		"downspeed": 100
         	}
         ]        
-        
 	}	

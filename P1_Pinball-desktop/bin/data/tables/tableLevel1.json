@@ -7,7 +7,7 @@
 		"targetTimeRatio": 2.3,
 		"gravity": 9.81,
 		
-		"numballs": 3,
+		"numballs": 1,
 		"ballradius": 1,
 		"ballcolor": [22, 22, 224],
 		"launch": {"position": [50, 2.5], "velocity": [0, 90], "deadzone": [18.8, 0, 20, 1.4]},

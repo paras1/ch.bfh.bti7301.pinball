@@ -19,7 +19,7 @@ public class Assets{
 
 		skin = new Skin(Gdx.files.internal("data/uiskin.json"));
 		
-		background = new Image((Drawable) Gdx.files.internal("data/back.jpg"));
+//		background = new Image((Drawable) Gdx.files.internal("data/back.jpg"));
 	}
 
 	}

@@ -60,8 +60,8 @@ public class SlingshotElement extends FieldElement {
 		Vector2 thisPos = slingshotBody.getPosition();
 		float ix = ballpos.x - thisPos.x;
 		float iy = ballpos.y - thisPos.y;
-		float mag = (float)Math.sqrt(ix*ix + iy*iy);
-		float scale = this.kick / mag;
+//		float mag = (float)Math.sqrt(ix*ix + iy*iy);
+		float scale = this.kick; // mag;
 		return new Vector2(ix*scale, iy*scale);
 //		return null;
 	}

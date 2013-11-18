@@ -59,7 +59,6 @@ public class LevelScreen implements Screen
 
 		Table table = new Table(Assets.skin);
 		
-//		final String level = "tableLevel1";
 		
 		FileHandle dirHandle;
 		if (Gdx.app.getType() == ApplicationType.Android) {
@@ -72,7 +71,8 @@ public class LevelScreen implements Screen
 		table.setFillParent(true);	
 		for (FileHandle entry: dirHandle.list()) {
 		   final String level = entry.file().getName();
-		   levelButton = new TextButton(level, Assets.skin);
+		   String levelname = level.substring(0, level.lastIndexOf('.'));
+		   levelButton = new TextButton(levelname, Assets.skin);
 			
 			levelButton.addListener(new InputListener() {
 				public boolean touchDown(InputEvent event, float x, float y,
@@ -85,8 +85,6 @@ public class LevelScreen implements Screen
 
 			});
 
-
-//			table.debug(); 
 			table.add(levelButton).width(150).height(50).padTop(10);
 			table.row();
 		}

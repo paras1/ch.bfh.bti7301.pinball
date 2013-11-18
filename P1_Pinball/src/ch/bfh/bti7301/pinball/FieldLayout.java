@@ -159,7 +159,6 @@ public class FieldLayout {
 		return targetTimeRatio;
 	}
 	
-	
 	public String getDelegateClassName() {
 		return (String)allParameters.get("delegate");
 	}
