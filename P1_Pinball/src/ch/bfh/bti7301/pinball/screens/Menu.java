@@ -5,6 +5,9 @@ import ch.bfh.bti7301.pinball.Assets;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureWrap;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -30,6 +33,13 @@ public class Menu implements Screen
 	TextButton startGameButton;
 	TextButton highscoreButton;
 	TextButton exitButton;
+	Texture backgroundImage;
+	SpriteBatch batcher;
+	SpriteBatch spriteBatchBack;
+	Sprite sprite;
+	
+	int width = Gdx.graphics.getWidth();
+	int height = Gdx.graphics.getHeight();
 
 	public Menu(PinballGame game) {
 		this.game = game;
@@ -38,9 +48,20 @@ public class Menu implements Screen
 	@Override
 	public void render(float delta) {
 		// TODO Auto-generated method stub
-		Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
+		//Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
+		spriteBatchBack = new SpriteBatch();
+		Texture spriteTexture = new Texture(Gdx.files.internal("data/back.png"));
+
+	    spriteTexture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
+	    sprite = new Sprite(spriteTexture, 0, 0, spriteTexture.getWidth(), spriteTexture.getHeight());
+	    sprite.setSize(width, height);
+		
+	    spriteBatchBack.begin();
+	    sprite.draw(spriteBatchBack);
+	    spriteBatchBack.end();
+		
 		stage.act(delta);
 		stage.draw();
 //		Table.drawDebug(stage);

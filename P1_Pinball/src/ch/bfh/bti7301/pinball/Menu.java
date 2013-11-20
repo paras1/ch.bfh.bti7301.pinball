@@ -1,21 +1,16 @@
 package ch.bfh.bti7301.pinball;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
-import javax.imageio.ImageIO;
-
-import ch.bfh.bti7301.pinball.screens.GameArea;
 import ch.bfh.bti7301.pinball.screens.HighscoreScreen;
 import ch.bfh.bti7301.pinball.screens.LevelScreen;
 import ch.bfh.bti7301.pinball.screens.PinballGame;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -23,7 +18,6 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 /**
  * The Menu class is the entry point of the game and draws a table with three buttons
@@ -41,10 +35,13 @@ public class Menu implements Screen
 	TextButton startGameButton;
 	TextButton highscoreButton;
 	TextButton exitButton;
-	private Texture backgroundTexture;
-	private Sprite backgroundSprite;
-	private SpriteBatch batcher;
-    private OrthographicCamera camera;  
+	Texture backgroundImage;
+	SpriteBatch batcher;
+	SpriteBatch spriteBatchBack;
+	Sprite sprite;
+	
+	int width = Gdx.graphics.getWidth();
+	int height = Gdx.graphics.getHeight();
 
 
 	public Menu(PinballGame game) {
@@ -54,9 +51,20 @@ public class Menu implements Screen
 	@Override
 	public void render(float delta) {
 		// TODO Auto-generated method stub
-		Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
+		//Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
+		spriteBatchBack = new SpriteBatch();
+		Texture spriteTexture = new Texture(Gdx.files.internal("data/back.png"));
+
+	    spriteTexture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
+	    sprite = new Sprite(spriteTexture, 0, 0, spriteTexture.getWidth(), spriteTexture.getHeight());
+	    sprite.setSize(width, height);
+		
+	    spriteBatchBack.begin();
+	    sprite.draw(spriteBatchBack);
+	    spriteBatchBack.end();
+		
 		stage.act(delta);
 		stage.draw();
 //		Table.drawDebug(stage);
@@ -144,23 +152,7 @@ public class Menu implements Screen
 		// TODO Auto-generated method stub
 
 	}
-	public void createBackgroundSprite(){
-	 backgroundTexture = new Texture(Gdx.files.internal("data/back.png"));
-	 backgroundTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
-	 backgroundSprite = new Sprite(backgroundTexture);
-	 backgroundSprite.setPosition(0, 0);
-	 backgroundSprite.setSize(506/10, 890/10 );
-		batcher.setProjectionMatrix(camera.combined);
-        batcher.begin();
-     backgroundSprite.draw(batcher);
-
-	}
-	public void disposeObjects() {
-		//dispose any object you created to free up the memory
-		backgroundTexture.dispose();
-		batcher.dispose();
-	}
 }
 
 

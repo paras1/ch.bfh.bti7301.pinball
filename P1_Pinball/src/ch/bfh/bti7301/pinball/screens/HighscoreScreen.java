@@ -1,17 +1,13 @@
 package ch.bfh.bti7301.pinball.screens;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Scanner;
-
-import ch.bfh.bti7301.pinball.Assets;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 
 public class HighscoreScreen implements Screen {
 
@@ -64,15 +60,16 @@ public class HighscoreScreen implements Screen {
 
 	}
 
-	public void ReadFile() throws IOException {
-		String file = "/Users/bfh/git/ch.bfh.bti7301.pinball/P1_Pinball-android/assets/data/highscorelist.txt";
+public void ReadFile() throws IOException {
+		
 		try {
-			InputStream ips = new FileInputStream(file);
-			InputStreamReader ipsr = new InputStreamReader(ips);
-			BufferedReader br = new BufferedReader(ipsr);
+			FileHandle fh = Gdx.files.internal("data/highscorelist.txt");
+			InputStream ips = fh.read();
+			
+			BufferedReader br = new BufferedReader(new InputStreamReader(ips));
 			String line;
 			while ((line = br.readLine()) != null) {
-				String[] values = line.split(",");
+				String[] values = line.split("|");
 				System.out.print(values[0] + "," + values[1] + "\n");
 			}
 			br.close();
@@ -80,5 +77,4 @@ public class HighscoreScreen implements Screen {
 			System.out.println(e.toString());
 		}
 	}
-
 }
