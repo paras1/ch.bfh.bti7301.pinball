@@ -12,14 +12,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 */
 public class Assets{
 	public static Skin skin;
-	public static Image background;
 
 
 	public static void load () {
 
 		skin = new Skin(Gdx.files.internal("data/uiskin.json"));
 		
-//		background = new Image((Drawable) Gdx.files.internal("data/back.jpg"));
 	}
 
 	}
