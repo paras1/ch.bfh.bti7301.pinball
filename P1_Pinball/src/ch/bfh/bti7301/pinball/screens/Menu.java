@@ -1,5 +1,7 @@
 package ch.bfh.bti7301.pinball.screens;
 
+import java.io.IOException;
+
 import ch.bfh.bti7301.pinball.Assets;
 
 import com.badlogic.gdx.Gdx;
@@ -38,6 +40,7 @@ public class Menu implements Screen
 	SpriteBatch spriteBatchBack;
 	Sprite sprite;
 	
+	
 	int width = Gdx.graphics.getWidth();
 	int height = Gdx.graphics.getHeight();
 
@@ -52,11 +55,7 @@ public class Menu implements Screen
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
 		spriteBatchBack = new SpriteBatch();
-		Texture spriteTexture = new Texture(Gdx.files.internal("data/back.png"));
 
-	    spriteTexture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
-	    sprite = new Sprite(spriteTexture, 0, 0, spriteTexture.getWidth(), spriteTexture.getHeight());
-	    sprite.setSize(width, height);
 		
 	    spriteBatchBack.begin();
 	    sprite.draw(spriteBatchBack);
@@ -80,6 +79,12 @@ public class Menu implements Screen
 		Gdx.input.setInputProcessor(stage);
 
 		Table table = new Table(Assets.skin);
+		
+		Texture spriteTexture = new Texture(Gdx.files.internal("data/back.png"));
+
+	    spriteTexture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
+	    sprite = new Sprite(spriteTexture, 0, 0, spriteTexture.getWidth(), spriteTexture.getHeight());
+	    sprite.setSize(width, height);
 
 		startGameButton = new TextButton("New Game", Assets.skin);
 		highscoreButton = new TextButton("Highscore", Assets.skin);
@@ -93,6 +98,23 @@ public class Menu implements Screen
 //				game.setScreen(new GameArea(game));
 				game.setScreen(new LevelScreen(game));
 
+				return true;
+			}
+
+		});
+		highscoreButton.addListener(new InputListener() {
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
+				// TODO Auto-generated method stub
+				HighscoreScreen hsc = new HighscoreScreen(game);
+				try {
+					hsc.ReadFile();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				game.setScreen(hsc);
+				
 				return true;
 			}
 
