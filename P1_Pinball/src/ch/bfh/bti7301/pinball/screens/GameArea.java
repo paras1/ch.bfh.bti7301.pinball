@@ -180,26 +180,12 @@ public class GameArea implements Screen {
 
         //Draw the background
         backgroundSprite.draw(batcher);
-        scoreFont.setScale(0.1f);
       //setting linear filtering
         scoreFont.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
-//        scoreFont.draw(batcher, scoreText, 23, 87);
-        
-        
-        
-        Texture texture = new Texture(Gdx.files.internal("data/default.png"));
-        texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-        BitmapFont font = new BitmapFont(Gdx.files.internal("data/default.fnt"), new TextureRegion(texture), false);
-        font.setScale(0.17f, 0.094f);
-        CharSequence str = "Score: ";
 
-        font.draw(batcher, str, 23,85);
-        
-//        CharSequence str = "Score: ";
-//        scoreFont = new BitmapFont();
-//        scoreFont.setScale(0.1f);
-//        scoreFont.setColor(Color.RED);
-//        scoreFont.draw(batcher, str, 23, 87);
+        scoreFont.setScale(0.2f);
+
+        scoreFont.draw(batcher, scoreText, 23,85);
 
         //Draw the bumpers
         for(int i = 0; i<elements.size(); i++){
@@ -230,7 +216,7 @@ public class GameArea implements Screen {
 		//if the screen is touched, the ballbody will be accelerated(launched)
     	List<Float> velocity = layout.getLaunchVelocity(); 
     	
-    	if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT)){
+    	if(Gdx.input.isTouched()){
     		activateFlippers(flippers, true);
     	}
     	else{
@@ -241,7 +227,7 @@ public class GameArea implements Screen {
     	if(isTouchable){
 			if(Gdx.input.isTouched()){
 				//check if the right bottom place of the screen is touched(ball start position)
-				if(Gdx.input.getX()>480 && Gdx.input.getY()>860){
+				if(Gdx.input.getX()>Gdx.graphics.getWidth()-25 && Gdx.input.getY()>Gdx.graphics.getHeight()-45){
 					ballBody.setLinearVelocity(new Vector2(velocity.get(0), velocity.get(1)));
 					isTouchable = false;
 				}
@@ -261,7 +247,7 @@ public class GameArea implements Screen {
         	}
         	isTouchable = true;
         }
-        debugRenderer.render(world, camera.combined);  
+//        debugRenderer.render(world, camera.combined);  
    
 	}
 	
@@ -280,7 +266,7 @@ public class GameArea implements Screen {
 		isTouchable = true;
 		
 		scoreText = "score: 0";
-	    scoreFont = new BitmapFont(Gdx.files.internal("data/default.fnt"), Gdx.files.internal("data/default.png"),false);
+	    scoreFont = new BitmapFont(Gdx.files.internal("data/score.fnt"),false);
 	    scoreFont.setColor(Color.RED);
 	    
         createBackgroundPhysic();
@@ -301,7 +287,7 @@ public class GameArea implements Screen {
         GameState.getInstance().startNewGame();
         setBall();
         
-        debugRenderer = new Box2DDebugRenderer();
+//        debugRenderer = new Box2DDebugRenderer();
 	}
 
 	@Override
@@ -317,7 +303,7 @@ public class GameArea implements Screen {
 			@Override
 			public void input (String text) {
 				playerName = text;
-				FileHandle file = Gdx.files.local("data/highscore.txt");
+				FileHandle file = Gdx.files.local("assets/data/highscorelist.txt");
 				file.writeString("\n"+GameState.getInstance().getScore()+","+playerName, true);
 				game.setScreen(new Menu(game));
 			}

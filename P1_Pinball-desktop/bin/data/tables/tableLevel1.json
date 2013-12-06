@@ -1,12 +1,5 @@
 	{
-		"name": "Default",
-		"width": 20,
-		"height": 30,
-		
-		"delegate": "Field1Delegate",
-		"targetTimeRatio": 2.3,
 		"gravity": 9.81,
-		
 		"numballs": 1,
 		"ballradius": 1,
 		"ballcolor": [22, 22, 224],

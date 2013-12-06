@@ -68,8 +68,9 @@ public void ReadFile() throws IOException {
 			
 			BufferedReader br = new BufferedReader(new InputStreamReader(ips));
 			String line;
+			String[] values;
 			while ((line = br.readLine()) != null) {
-				String[] values = line.split("|");
+				values= line.split(",");
 				System.out.print(values[0] + "," + values[1] + "\n");
 			}
 			br.close();

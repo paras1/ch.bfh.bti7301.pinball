@@ -1,11 +1,6 @@
 	{
-		"name": "Default",
-		"width": 20,
-		"height": 30,
-		"delegate": "Field1Delegate",
 		"numballs": 3,
 		"ballradius": 1,
-		"ballcolor": [22, 22, 224],
 		"launch": {"position": [50, 2.5], "velocity": [0, 90], "deadzone": [18.8, 0, 20, 1.4]},
 		
 		"elements": [
