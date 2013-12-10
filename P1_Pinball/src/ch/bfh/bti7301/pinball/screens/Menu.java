@@ -34,7 +34,7 @@ public class Menu implements Screen
 	PinballGame game;
 	TextButton startGameButton;
 	TextButton highscoreButton;
-	TextButton exitButton;
+	TextButton editorButton;
 	Texture backgroundImage;
 	SpriteBatch batcher;
 	SpriteBatch spriteBatchBack;
@@ -88,7 +88,7 @@ public class Menu implements Screen
 
 		startGameButton = new TextButton("New Game", Assets.skin);
 		highscoreButton = new TextButton("Highscore", Assets.skin);
-		exitButton = new TextButton("Editor", Assets.skin);
+		editorButton = new TextButton("Editor", Assets.skin);
 
 		
 		startGameButton.addListener(new InputListener() {
@@ -119,6 +119,16 @@ public class Menu implements Screen
 			}
 
 		});
+		editorButton.addListener(new InputListener() {
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
+				EditorScreen editor = new EditorScreen(game);
+				game.setScreen(editor);
+				
+				return true;
+			}
+
+		});
 
 
 		table.setFillParent(true);
@@ -127,7 +137,7 @@ public class Menu implements Screen
 		table.row();
 		table.add(highscoreButton).width(150).height(50).padTop(10);
 		table.row();
-		table.add(exitButton).width(150).height(50).padTop(10);
+		table.add(editorButton).width(150).height(50).padTop(10);
 
 //		stage.addActor(backImage);
 		stage.addActor(table);
