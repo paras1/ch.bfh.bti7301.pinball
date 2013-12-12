@@ -72,21 +72,23 @@ public class LevelScreen implements Screen
 		for (FileHandle entry: dirHandle.list()) {
 		   final String level = entry.file().getName();
 		   String levelname = level.substring(0, level.lastIndexOf('.'));
-		   levelButton = new TextButton(levelname, Assets.skin);
-			
-			levelButton.addListener(new InputListener() {
-				public boolean touchDown(InputEvent event, float x, float y,
-						int pointer, int button) {
-					// TODO Auto-generated method stub
-					game.setScreen(new GameArea(game, level));
-
-					return true;
-				}
-
-			});
-
-			table.add(levelButton).width(350).height(150).padTop(50);
-			table.row();
+		   if (!levelname.equals("new_Board")) {
+			   levelButton = new TextButton(levelname, Assets.skin);
+				
+				levelButton.addListener(new InputListener() {
+					public boolean touchDown(InputEvent event, float x, float y,
+							int pointer, int button) {
+						// TODO Auto-generated method stub
+						game.setScreen(new GameArea(game, level));
+	
+						return true;
+					}
+	
+				});
+	
+				table.add(levelButton).width(350).height(150).padTop(50);
+				table.row();
+		   }
 		}
 
 		stage.addActor(table);
