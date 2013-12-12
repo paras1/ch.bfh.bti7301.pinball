@@ -85,7 +85,7 @@ public class LevelScreen implements Screen
 
 			});
 
-			table.add(levelButton).width(150).height(50).padTop(10);
+			table.add(levelButton).width(350).height(150).padTop(50);
 			table.row();
 		}
 

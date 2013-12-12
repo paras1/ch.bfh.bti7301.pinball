@@ -123,11 +123,11 @@ public class Menu implements Screen
 
 		table.setFillParent(true);
 //		table.debug(); 
-		table.add(startGameButton).width(150).height(50);
+		table.add(startGameButton).width(350).height(150);
 		table.row();
-		table.add(highscoreButton).width(150).height(50).padTop(10);
+		table.add(highscoreButton).width(350).height(150).padTop(50);
 		table.row();
-		table.add(exitButton).width(150).height(50).padTop(10);
+		table.add(exitButton).width(350).height(150).padTop(50);
 
 //		stage.addActor(backImage);
 		stage.addActor(table);

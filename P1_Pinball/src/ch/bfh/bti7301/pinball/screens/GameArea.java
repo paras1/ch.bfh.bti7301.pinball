@@ -130,7 +130,7 @@ public class GameArea implements Screen {
     /** Draws the ball sprite
      */
     public Sprite getBallSprite(){
-		Sprite ballSprite = new Sprite(new Texture("data/kugel1.png"));
+		Sprite ballSprite = new Sprite(new Texture("data/kugel3.png"));
 		ballSprite.setSize(3f, 3f);
 		ballSprite.setOrigin(ballSprite.getWidth()/2, ballSprite.getHeight()/2);
 		ballSprite.setPosition(ballBody.getPosition().x - ballSprite.getWidth()/2, ballBody.getPosition().y - ballSprite.getHeight()/2);
@@ -174,7 +174,6 @@ public class GameArea implements Screen {
 		//start the batcher, so we would want to do all of our draw calls between batcher.begin and .end
 		batcher.setProjectionMatrix(camera.combined);
         batcher.begin();
-        
         
         scoreText = "Score: "+GameState.getInstance().getScore();
 
@@ -227,7 +226,7 @@ public class GameArea implements Screen {
     	if(isTouchable){
 			if(Gdx.input.isTouched()){
 				//check if the right bottom place of the screen is touched(ball start position)
-				if(Gdx.input.getX()>Gdx.graphics.getWidth()-25 && Gdx.input.getY()>Gdx.graphics.getHeight()-45){
+				if(Gdx.input.getX()>Gdx.graphics.getWidth()-45 && Gdx.input.getY()>Gdx.graphics.getHeight()-65){
 					ballBody.setLinearVelocity(new Vector2(velocity.get(0), velocity.get(1)));
 					isTouchable = false;
 				}
@@ -311,6 +310,7 @@ public class GameArea implements Screen {
 			@Override
 			public void canceled () {
 				playerName = "default";
+				game.setScreen(new Menu(game));
 			}
 		}, "enter your name", "");
 		isInputDone = true;

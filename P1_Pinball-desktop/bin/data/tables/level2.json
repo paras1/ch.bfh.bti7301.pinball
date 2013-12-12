@@ -1,35 +1,116 @@
-	{
-		"numballs": 3,
-		"ballradius": 1,
-		"launch": {"position": [50, 2.5], "velocity": [0, 90], "deadzone": [18.8, 0, 20, 1.4]},
-		
-		"elements": [
-		"bumpers below top lanes",
-			{"class": "BumperElement", "radius": 2.35, "position": [19.5, 60], "kick": 60.0, "color": [0, 0, 224], "score": 5},
-			"purple bumper is extra points",
-			{"class": "BumperElement", "radius": 1.40, "position": [24.5, 63.5], "kick": 80, "color": [192, 0, 192], "score": 10},
-			"slingshots",
-			{"class": "SlingshotElement", "position": [34.5, 13.5], "length": [7.7, 14.5], "kick": 80},
-			{"class": "SlingshotElement", "position": [12.7, 13.5], "length": [-7.7, 14.5], "kick": 80},
-		
-		],
-		  
-		  "flippers": [
-        	{
-        		"position": [12.35, 9.2],
-        		"length": 9.0,
-        		"minangle": -20,
-        		"maxangle": 20,
-        		"upspeed": 100,
-        		"downspeed": 100
-        	},
-        	{
-        		"position": [34.35, 9.2],
-        		"length": -9.0,
-        		"minangle": -20,
-        		"maxangle": 20,
-        		"upspeed": 100,
-        		"downspeed": 100
-        	}
-        ]        
-	}	
+{
+    "numballs": 1,
+    "ballradius": 1,
+    "launch": {
+        "position": [
+            50,
+            2.5
+        ],
+        "velocity": [
+            0,
+            90
+        ],
+        "deadzone": [
+            18.8,
+            0,
+            20,
+            1.4
+        ]
+    },
+    "elements": [
+        {
+            "class": "BumperElement",
+            "radius": 2.35,
+            "position": [
+                15.5,
+                55
+            ],
+            "kick": 800.0f,
+            "color": [
+                0,
+                0,
+                224
+            ],
+            "score": 5
+        },
+        {
+            "class": "BumperElement",
+            "radius": 2.4,
+            "position": [
+                24.5,
+                62.5
+            ],
+            "kick": 800.0f,
+            "color": [
+                192,
+                0,
+                192
+            ],
+            "score": 10
+        },
+        {
+            "class": "BumperElement",
+            "radius": 1.4,
+            "position": [
+                30.5,
+                57.5
+            ],
+            "kick": 800.0f,
+            "color": [
+                192,
+                0,
+                192
+            ],
+            "score": 10
+        },
+        "slingshots",
+        {
+            "class": "SlingshotElement",
+            "position": [
+                34.5,
+                13.5
+            ],
+            "length": [
+                7.7,
+                14.5
+            ],
+            "kick": 800.0f
+        },
+        {
+            "class": "SlingshotElement",
+            "position": [
+                12.7,
+                13.5
+            ],
+            "length": [
+                -7.7,
+                14.5
+            ],
+            "kick": 800.0f
+        }
+    ],
+    "flippers": [
+        {
+            "position": [
+                12.35,
+                9.2
+            ],
+            "length": 9,
+            "minangle": -20,
+            "maxangle": 20,
+            "upspeed": 50,
+            "downspeed": 50
+        },
+        {
+            "position": [
+                34.35,
+                9.2
+            ],
+            "length": -9,
+            "minangle": -20,
+            "maxangle": 20,
+            "upspeed": 50,
+            "downspeed": 50
+        }
+    ]
+}
