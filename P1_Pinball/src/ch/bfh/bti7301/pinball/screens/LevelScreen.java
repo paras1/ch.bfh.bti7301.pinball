@@ -8,6 +8,10 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.Texture.TextureWrap;
+import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -29,6 +33,13 @@ public class LevelScreen implements Screen
 	TextButton levelButton;
 	TextButton levelButton2;
 	final String level = "";
+	//Hintergrundbild
+	Texture backgroundImage;
+	SpriteBatch batcher;
+	SpriteBatch spriteBatchBack;
+	Sprite sprite;
+	int width = Gdx.graphics.getWidth();
+	int height = Gdx.graphics.getHeight();
 
 	public LevelScreen(PinballGame game) {
 		this.game = game;
@@ -37,8 +48,14 @@ public class LevelScreen implements Screen
 	@Override
 	public void render(float delta) {
 		// TODO Auto-generated method stub
-		Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
+		//Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		
+		//Hintergrundbild
+		spriteBatchBack = new SpriteBatch();
+	    spriteBatchBack.begin();
+	    sprite.draw(spriteBatchBack);
+	    spriteBatchBack.end();
 
 		stage.act(delta);
 		stage.draw();
@@ -57,9 +74,14 @@ public class LevelScreen implements Screen
 		stage = new Stage();
 		Gdx.input.setInputProcessor(stage);
 
+		//Hintergrundbild
+		Texture spriteTexture = new Texture(Gdx.files.internal("data/back2.png"));
+	    spriteTexture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
+	    sprite = new Sprite(spriteTexture, 0, 0, spriteTexture.getWidth(), spriteTexture.getHeight());
+	    sprite.setSize(width, height);
+		
 		Table table = new Table(Assets.skin);
-		
-		
+				
 		FileHandle dirHandle;
 		if (Gdx.app.getType() == ApplicationType.Android) {
 			  dirHandle = Gdx.files.internal("data/tables");

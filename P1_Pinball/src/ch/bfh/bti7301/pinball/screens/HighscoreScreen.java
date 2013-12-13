@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -69,9 +70,14 @@ public void ReadFile() throws IOException {
 			BufferedReader br = new BufferedReader(new InputStreamReader(ips));
 			String line;
 			String[] values;
+			//Map<K, V, V> m = new HashMap<Integer,<Integer,String>>(); 
+			//int i = 0;
 			while ((line = br.readLine()) != null) {
+				
 				values= line.split(",");
 				System.out.print(values[0] + "," + values[1] + "\n");
+				//m.put(i,values[0], values[1]);
+				//i++;
 			}
 			br.close();
 		} catch (Exception e) {

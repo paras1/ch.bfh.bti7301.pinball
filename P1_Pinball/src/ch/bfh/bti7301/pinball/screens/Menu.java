@@ -35,12 +35,12 @@ public class Menu implements Screen
 	TextButton startGameButton;
 	TextButton highscoreButton;
 	TextButton exitButton;
+	
+	//Hintergrundbild
 	Texture backgroundImage;
 	SpriteBatch batcher;
 	SpriteBatch spriteBatchBack;
-	Sprite sprite;
-	
-	
+	Sprite sprite;	
 	int width = Gdx.graphics.getWidth();
 	int height = Gdx.graphics.getHeight();
 
@@ -54,9 +54,8 @@ public class Menu implements Screen
 		//Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
+		//Hintergrundbild
 		spriteBatchBack = new SpriteBatch();
-
-		
 	    spriteBatchBack.begin();
 	    sprite.draw(spriteBatchBack);
 	    spriteBatchBack.end();
@@ -80,8 +79,8 @@ public class Menu implements Screen
 
 		Table table = new Table(Assets.skin);
 		
+		//Hintergrundbild
 		Texture spriteTexture = new Texture(Gdx.files.internal("data/back.png"));
-
 	    spriteTexture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 	    sprite = new Sprite(spriteTexture, 0, 0, spriteTexture.getWidth(), spriteTexture.getHeight());
 	    sprite.setSize(width, height);
