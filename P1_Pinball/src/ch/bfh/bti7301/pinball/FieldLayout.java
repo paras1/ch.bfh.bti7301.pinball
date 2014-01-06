@@ -37,7 +37,7 @@ public class FieldLayout {
 		try {
 			String assetPath = "tables/"+ name;
 			
-			FileHandle fh = Gdx.files.classpath("data/"+assetPath);
+			FileHandle fh = Gdx.files.internal("data/"+assetPath);
 			InputStream fin = fh.read();
 			
 			BufferedReader br = new BufferedReader(new InputStreamReader(fin));

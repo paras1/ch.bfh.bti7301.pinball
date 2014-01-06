@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import ch.bfh.bti7301.pinball.Physic;
+import ch.bfh.bti7301.pinball.PinballSound;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -72,6 +73,7 @@ public class SlingshotElement extends FieldElement {
 		if (impulse!=null) {
 			ball.applyLinearImpulse(impulse, ball.getWorldCenter());
 		}
+		PinballSound.getInstance().playSlingshot();
 	}
 	
 }

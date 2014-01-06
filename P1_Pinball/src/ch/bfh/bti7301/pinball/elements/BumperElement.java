@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import ch.bfh.bti7301.pinball.Physic;
+import ch.bfh.bti7301.pinball.PinballSound;
 
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -75,6 +76,7 @@ public class BumperElement extends FieldElement {
 		if (impulse!=null) {
 			ball.applyLinearImpulse(impulse, ball.getWorldCenter());
 		}
+		PinballSound.getInstance().playBumpers();
 	}
 	
 //    /*
