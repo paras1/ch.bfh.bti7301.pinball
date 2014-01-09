@@ -60,37 +60,7 @@ public class LevelScreen implements Screen
 		Table table = new Table(Assets.skin);
 		
 		
-		FileHandle dirHandle;
-		if (Gdx.app.getType() == ApplicationType.Android) {
-			  dirHandle = Gdx.files.local("local/tables");
-		} else {
-		  // ApplicationType.Desktop ..
-		  dirHandle = Gdx.files.internal("local/tables");
-		}
-
-		table.setFillParent(true);	
-		for (FileHandle entry: dirHandle.list()) {
-		   final String level = entry.file().getName();
-		   String levelname = level.substring(0, level.lastIndexOf('.'));
-		   if (!levelname.equals("new_Board")) {
-			   levelButton = new TextButton(levelname+" (OWN)", Assets.skin);
-				
-				levelButton.addListener(new InputListener() {
-					public boolean touchDown(InputEvent event, float x, float y,
-							int pointer, int button) {
-						// TODO Auto-generated method stub
-						game.setScreen(new GameArea(game, level, true));
-	
-						return true;
-					}
-	
-				});
-	
-				table.add(levelButton).width(350).height(150).padTop(50);
-				table.row();
-		   }
-		}
-		
+		FileHandle dirHandle;		
 		if (Gdx.app.getType() == ApplicationType.Android) {
 			  dirHandle = Gdx.files.internal("data/tables");
 		} else {
@@ -117,6 +87,36 @@ public class LevelScreen implements Screen
 				});
 	
 				table.add(levelButton).width(350).height(150).padTop(50);
+				table.row();
+		   }
+		}
+		
+		if (Gdx.app.getType() == ApplicationType.Android) {
+			  dirHandle = Gdx.files.local("local/tables");
+		} else {
+		  // ApplicationType.Desktop ..
+		  dirHandle = Gdx.files.internal("local/tables");
+		}
+
+		table.setFillParent(true);	
+		for (FileHandle entry: dirHandle.list()) {
+		   final String level = entry.file().getName();
+		   String levelname = level.substring(0, level.lastIndexOf('.'));
+		   if (!levelname.equals("new_Board")) {
+			   levelButton2 = new TextButton(levelname+" (OWN)", Assets.skin);
+				
+				levelButton2.addListener(new InputListener() {
+					public boolean touchDown(InputEvent event, float x, float y,
+							int pointer, int button) {
+						// TODO Auto-generated method stub
+						game.setScreen(new GameArea(game, level, true));
+	
+						return true;
+					}
+	
+				});
+	
+				table.add(levelButton2).width(350).height(150).padTop(50);
 				table.row();
 		   }
 		}

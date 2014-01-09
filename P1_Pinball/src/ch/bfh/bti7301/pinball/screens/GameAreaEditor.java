@@ -230,21 +230,9 @@ public class GameAreaEditor implements Screen {
 	        if(flippers.get(i) instanceof FlipperElement){
 	        	FlipperElement flipper = (FlipperElement)flippers.get(i);
 	        	flipper.drawFlipper().draw(batcher);
-//	        	flipper.getSprite().draw(batcher);
 	        }
         }
 
-        //Draw the ball
-		//getBallSprite().draw(batcher);   
-
-		
-		
-		//find objects that collide in our pinballworld during rendering process
-//		Physic.doCollisionDetection(world);
-
-
-		//if the screen is touched, the ballbody will be accelerated(launched)
-    	//List<Float> velocity = layout.getLaunchVelocity(); 
     	if (isTouchable){
 	    	if(Gdx.input.isTouched() && Gdx.input.getY() < 750){
 	    		mpActualBumper.put("class", "BumperElement");
@@ -264,35 +252,20 @@ public class GameAreaEditor implements Screen {
 	    		mpActualBumper.put("color", alBumperColor1);
 	    		
 	    		if (alBumperPosition.size()>0){
-		    		alBumperPosition.set(0,(float)Gdx.input.getX()/10);
-		    		alBumperPosition.set(1, (float)Gdx.input.getY()/10);
+		    		alBumperPosition.set(0, (float)Gdx.input.getX()/10);
+		    		alBumperPosition.set(1, (camera.viewportHeight-(float)Gdx.input.getY()/10));
 	    		} else {
 		    		alBumperPosition.add((float)Gdx.input.getX()/10);
-		    		alBumperPosition.add((float)Gdx.input.getY()/10);
+		    		alBumperPosition.add((camera.viewportHeight-(float)Gdx.input.getY()/10));
 	    		}
 	    		mpActualBumper.put("position", alBumperPosition);
 	    		System.out.println(mpActualBumper.toString());
-	    		//layout.addFieldElements(mpActualBumper, "", BumperElement.class, world);
+
 	    		System.out.println(EditorBuffer.getInstance().getActualBumperNum()+": "+layout.getFieldElements());
-	    		//elements = layout.getFieldElements();
-	    		
-	    		//batcher.begin();
-	    		
-	    		//getSprite().draw(batcher);
-//	            for(int i = 0; i<elements.size(); i++){
-//	            	System.out.println(elements.get(i).toString());
-//	    	        if(elements.get(i) instanceof BumperElement){
-//	    	        	BumperElement bump = (BumperElement)elements.get(i);
-//	    	        	bump.getSprite().draw(batcher);
-//	    	        }
-//	            }
+
 	            System.out.println("GDX X:"+Gdx.input.getX());
 	            System.out.println("GDX Y:"+Gdx.input.getY());
 	            isNewBumperVisible = true;
-	            
-	            //batcher.end();
-	            
-	        
 	    		
 	    	}
 	    	else{
@@ -300,8 +273,6 @@ public class GameAreaEditor implements Screen {
 	    	}
 	    	if (isNewBumperVisible) {
 	    		drawBumper(alBumperPosition.get(0), alBumperPosition.get(1), EditorBuffer.getInstance().getActualBumperRadius()).draw(batcher);
-	    		//bumperOK();
-	    		//isTouchable = false;
 	    	}
 		}
     	
@@ -310,31 +281,6 @@ public class GameAreaEditor implements Screen {
     	
     	stage.act(delta);
     	stage.draw();
-    	
-//    	if(isTouchable){
-//			if(Gdx.input.isTouched()){
-//				//check if the right bottom place of the screen is touched(ball start position)
-//				if(Gdx.input.getX()>Gdx.graphics.getWidth()-25 && Gdx.input.getY()>Gdx.graphics.getHeight()-45){
-//					ballBody.setLinearVelocity(new Vector2(velocity.get(0), velocity.get(1)));
-//					isTouchable = false;
-//				}
-//			}
-//    	}
-//    	//check if ball is in "deadzone" position of ball < 0 in y screen axis
-//        if(ballBody.getPosition().y < 0){
-//        	GameState.getInstance().doNextBall();
-//        	if(GameState.getInstance().isGameInProgress()){
-//            	world.destroyBody(ballBody);
-//        		setBall();
-//        	}
-//        	else{
-//        		if(isInputDone==false){
-//        		gameOver();
-//        		}
-//        	}
-//        	isTouchable = true;
-//        }
-//        debugRenderer.render(world, camera.combined);  
    
 	}
 
@@ -376,8 +322,6 @@ public class GameAreaEditor implements Screen {
         
         tbNext.addListener(new InputListener() {
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-				//String level = EditorBuffer.getInstance().getLevelname()+".json";
-				//String level = "new_board.json";
 				EditorBuffer.getInstance().addAlElementsBufferElement(mpActualBumper);
 				if(EditorBuffer.getInstance().getActualBumperNum()<EditorBuffer.getInstance().getNumBumpers()){
 					EditorBuffer.getInstance().setActualBumperNum(EditorBuffer.getInstance().getActualBumperNum()+1);
@@ -393,20 +337,15 @@ public class GameAreaEditor implements Screen {
 		});
         tbBack = new TextButton("BACK", Assets.skin);
         
-//		tbNext.setScale(0.1f);
-//		tbBack.setScale(0.1f);
-        
+
         Table table = new Table();
         table.setFillParent(true);
-//      table.setScale(0.1f);
         table.bottom();
         
         table.add(tbBack).align(Align.left).width(120).height(40).padRight(220);
         table.add(tbNext).align(Align.right).width(120).height(40);
         
         stage.addActor(table);
-
-//        debugRenderer = new Box2DDebugRenderer();
 	}
 
 	@Override
@@ -415,44 +354,6 @@ public class GameAreaEditor implements Screen {
 		
 	}
 	
-//	private void bumperOK(){
-//		Gdx.app.log("gamestate: ", "GAMEOVER!!!");
-//		Gdx.app.log("endscore: ", GameState.getInstance().getScore()+"");
-//		Gdx.input.getTextInput(new TextInputListener() {
-//			@Override
-//			public void input () {
-//				playerName = text;
-//				game.setScreen(new Menu(game));
-//			}
-//
-//			@Override
-//			public void canceled () {
-//				playerName = "default";
-//			}
-//		}, "enter your name", "");
-//		isInputDone = true;
-//    
-//	}
-	
-	private void gameOver(){
-		Gdx.app.log("gamestate: ", "BumperOK?!!!");
-		Gdx.app.log("endscore: ", GameState.getInstance().getScore()+"");
-		Gdx.input.getTextInput(new TextInputListener() {
-			@Override
-			public void input (String text) {
-				playerName = text;
-				FileHandle file = Gdx.files.local("assets/data/highscorelist.txt");
-				file.writeString("\n"+GameState.getInstance().getScore()+","+playerName, true);
-				game.setScreen(new Menu(game));
-			}
-
-			@Override
-			public void canceled () {
-				playerName = "default";
-			}
-		}, "enter your name", "");
-		isInputDone = true;
-	}
 	
     public Sprite drawBumper(Float posx, Float posy, Float radius){
     	 
@@ -467,7 +368,7 @@ public class GameAreaEditor implements Screen {
  		
  		bumperSprite = new Sprite(texture);
  		bumperSprite.setSize(radius*2, radius*2);
- 		bumperSprite.setPosition(posx-2, camera.viewportHeight-posy-2);
+ 		bumperSprite.setPosition(posx-2, posy-2);
  		
 		return bumperSprite;
     	
