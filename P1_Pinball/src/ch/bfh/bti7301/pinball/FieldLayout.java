@@ -33,11 +33,17 @@ public class FieldLayout {
 	static Map<Object, Map> _layoutMap = new HashMap();
 
 	
-	static Map readFieldLayout(String  name) {
+	public static Map readFieldLayout(String  name, boolean isGame) {
 		try {
 			String assetPath = "tables/"+ name;
 			
-			FileHandle fh = Gdx.files.internal("data/"+assetPath);
+			FileHandle fh;
+			if(isGame){
+				fh = Gdx.files.internal("data/"+assetPath);
+			} else {
+				fh = Gdx.files.local("local/tables/"+name);
+				System.out.println("Getting Layout for: "+name);
+			}
 			InputStream fin = fh.read();
 			
 			BufferedReader br = new BufferedReader(new InputStreamReader(fin));
@@ -56,10 +62,10 @@ public class FieldLayout {
 		}
 	}
 	
-	public static FieldLayout layoutForLevel(String name, World world) {
+	public static FieldLayout layoutForLevel(String name, World world, boolean isGame) {
 		Map levelLayout = _layoutMap.get(name);
 		if (levelLayout==null) {
-			levelLayout = readFieldLayout(name);
+			levelLayout = readFieldLayout(name, isGame);
 			_layoutMap.put(name, levelLayout);
 		}
 		return new FieldLayout(levelLayout, world);
@@ -80,7 +86,7 @@ public class FieldLayout {
 		return Collections.EMPTY_LIST;
 	}
 	
-	List addFieldElements(Map layoutMap, String key, Class defaultClass, World world) {
+	public List addFieldElements(Map layoutMap, String key, Class defaultClass, World world) {
 		List elements = new ArrayList();
 		for(Object obj : listForKey(layoutMap, key)) {
 			// allow strings in JSON for comments

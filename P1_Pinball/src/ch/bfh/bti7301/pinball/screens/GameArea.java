@@ -39,7 +39,7 @@ import com.badlogic.gdx.physics.box2d.World;
  * @version 1.0
  */
 public class GameArea implements Screen {
-
+	
     private World world;  
     private Box2DDebugRenderer debugRenderer;  
     private OrthographicCamera camera;  
@@ -59,7 +59,6 @@ public class GameArea implements Screen {
 	private boolean isInputDone = false;
 	private PinballSound sound;
 	private GameState state;
-	
 
  
 	//things needed to draw
@@ -72,15 +71,17 @@ public class GameArea implements Screen {
 	private PinballGame game;
 	
 	private boolean isTouchable;
-	String level;
 	
+	private boolean isOwnBoard;
+	String level;
 
 
 
     // constructor to keep a reference to the main Game class
-     public GameArea(PinballGame game, String level){
+     public GameArea(PinballGame game, String level, boolean isOwnBoard){
              this.game = game;
              this.level = level;
+             this.isOwnBoard = isOwnBoard;
      }
      
      private void createBackgroundPhysic() {
@@ -125,7 +126,6 @@ public class GameArea implements Screen {
 		ballBody = Physic.createCircle(world, position.get(0).floatValue(), position.get(1).floatValue(), radius, false);
 		ballBody.setBullet(true);
 //		VPSoundpool.playBall();
-		
     }
     
     /** Draws the ball sprite
@@ -176,6 +176,7 @@ public class GameArea implements Screen {
 		batcher.setProjectionMatrix(camera.combined);
         batcher.begin();
         
+        
         scoreText = "Score: "+state.getScore();
 
         //Draw the background
@@ -183,9 +184,9 @@ public class GameArea implements Screen {
       //setting linear filtering
         scoreFont.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
-        scoreFont.setScale(0.15f);
+        scoreFont.setScale(0.2f);
 
-        scoreFont.draw(batcher, scoreText, 21,88);
+        scoreFont.draw(batcher, scoreText, 23,85);
 
         //Draw the bumpers
         for(int i = 0; i<elements.size(); i++){
@@ -283,8 +284,8 @@ public class GameArea implements Screen {
         camera.position.set(camera.viewportWidth * .5f, camera.viewportHeight * .5f, 0f);  
         camera.update();  
         
-        layout = FieldLayout.layoutForLevel(level,world);
-
+        layout = FieldLayout.layoutForLevel(level,world, !isOwnBoard);
+        
         sound =  PinballSound.getInstance();
         state = GameState.getInstance();
         
@@ -293,9 +294,6 @@ public class GameArea implements Screen {
         state.startNewGame();
         sound.playStart();
         setBall();
-        
-        
-        
 //        debugRenderer = new Box2DDebugRenderer();
 	}
 

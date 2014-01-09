@@ -62,11 +62,41 @@ public class LevelScreen implements Screen
 		
 		FileHandle dirHandle;
 		if (Gdx.app.getType() == ApplicationType.Android) {
+			  dirHandle = Gdx.files.local("local/tables");
+		} else {
+		  // ApplicationType.Desktop ..
+		  dirHandle = Gdx.files.internal("local/tables");
+		}
+
+		table.setFillParent(true);	
+		for (FileHandle entry: dirHandle.list()) {
+		   final String level = entry.file().getName();
+		   String levelname = level.substring(0, level.lastIndexOf('.'));
+		   if (!levelname.equals("new_Board")) {
+			   levelButton = new TextButton(levelname+" (OWN)", Assets.skin);
+				
+				levelButton.addListener(new InputListener() {
+					public boolean touchDown(InputEvent event, float x, float y,
+							int pointer, int button) {
+						// TODO Auto-generated method stub
+						game.setScreen(new GameArea(game, level, true));
+	
+						return true;
+					}
+	
+				});
+	
+				table.add(levelButton).width(350).height(150).padTop(50);
+				table.row();
+		   }
+		}
+		
+		if (Gdx.app.getType() == ApplicationType.Android) {
 			  dirHandle = Gdx.files.internal("data/tables");
-			} else {
-			  // ApplicationType.Desktop ..
-			  dirHandle = Gdx.files.internal("./bin/data/tables");
-			}
+		} else {
+		  // ApplicationType.Desktop ..
+		  dirHandle = Gdx.files.internal("./bin/data/tables");
+		}
 
 		table.setFillParent(true);	
 		for (FileHandle entry: dirHandle.list()) {
@@ -79,7 +109,7 @@ public class LevelScreen implements Screen
 					public boolean touchDown(InputEvent event, float x, float y,
 							int pointer, int button) {
 						// TODO Auto-generated method stub
-						game.setScreen(new GameArea(game, level));
+						game.setScreen(new GameArea(game, level, false));
 	
 						return true;
 					}

@@ -17,7 +17,7 @@ public class PinballGame extends Game
 	   String defaultLevel = "";
 	   Texture.setEnforcePotImages(false);
        mainMenuScreen = new Menu(this);
-       gameScreen = new GameArea(this, defaultLevel);
+       gameScreen = new GameArea(this, defaultLevel, false);
        setScreen(mainMenuScreen);              
     }
 }
