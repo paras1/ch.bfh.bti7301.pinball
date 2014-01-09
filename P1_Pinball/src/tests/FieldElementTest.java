@@ -14,7 +14,7 @@ public class FieldElementTest {
 	@Test
 	public void test() {
 //		World world = new World(new Vector2(0.0f, -20f), true);
-		FieldLayout layout = FieldLayout.layoutForLevel("level2.json", null);
+		FieldLayout layout = FieldLayout.layoutForLevel("level2.json", null, false);
 		assertTrue(1.0f ==layout.getBallRadius());
 	}
 
