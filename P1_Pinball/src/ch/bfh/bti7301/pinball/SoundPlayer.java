@@ -33,5 +33,5 @@ public class SoundPlayer {
 	    // play sound with same right and left volume, with a priority of 1, 
 	    // zero repeats (i.e play once), and a playback rate of 1f
 	    soundPool.play(soundPoolMap.get(soundID), volume, volume, 1, 0, 1f);
-	 }
+	 }d
 }

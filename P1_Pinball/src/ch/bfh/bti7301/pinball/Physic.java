@@ -38,9 +38,13 @@ public class Physic {
 		
 		FixtureDef fdef = new FixtureDef();
 		fdef.shape = sd;
-		fdef.density = 0.7f;
+		fdef.density = 0.5f;
+		fdef.friction = 0.1f;
+		fdef.restitution = 0.0f;
+
+		/*fdef.density = 0.7f;
 		fdef.friction = 0.3f;
-		fdef.restitution = 0.6f;
+		fdef.restitution = 0.6f;*/
 		
 		BodyDef bd = new BodyDef();
 		bd.allowSleep = true;

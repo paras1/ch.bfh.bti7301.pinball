@@ -1,5 +1,8 @@
 package ch.bfh.bti7301.pinball.screens;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 
 import aurelienribon.bodyeditor.BodyEditorLoader;
@@ -8,13 +11,8 @@ import ch.bfh.bti7301.pinball.GameState;
 import ch.bfh.bti7301.pinball.Physic;
 import ch.bfh.bti7301.pinball.elements.BumperElement;
 import ch.bfh.bti7301.pinball.elements.FlipperElement;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
@@ -26,9 +24,7 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -36,7 +32,6 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 
 /**
  * This Class draws the GameArea and its elements with their physic
@@ -62,7 +57,7 @@ public class GameArea implements Screen {
 
 	private String scoreText;
 	BitmapFont scoreFont;
-	String playerName;
+	String playername = "player1";
 	private boolean isInputDone = false;
 
 	// things needed to draw
@@ -80,6 +75,10 @@ public class GameArea implements Screen {
 	private static final int NUMBER_OF_HIGHSCORES = 5;
 	private FileHandle fhin = Gdx.files.internal("data/highscorelist.txt");
 	private FileHandle fhout = Gdx.files.local("data/highscorelist.txt");
+	private FileHandle level1 = Gdx.files.internal("data/pinballbody.json");
+	private FileHandle level2 = Gdx.files.internal("data/pinballbody2.json");
+	private FileHandle deci;
+
 
 	// constructor to keep a reference to the main Game class
 	public GameArea(PinballGame game, String level) {
@@ -89,9 +88,15 @@ public class GameArea implements Screen {
 
 	private void createBackgroundPhysic() {
 		// Create a loader for the file saved from the editor.
-		BodyEditorLoader loader = new BodyEditorLoader(
-				Gdx.files.internal("data/pinballbody.json"));
+		if (level.equals("Level 1.json")) {
+			deci = Gdx.files.internal("data/pinballbody.json");
+			}
+		else {
+			deci = Gdx.files.internal("data/pinballbody2.json");
 
+		}
+		
+		BodyEditorLoader loader = new BodyEditorLoader(deci);
 		// Create a BodyDef, as usual.
 		BodyDef bd = new BodyDef();
 		bd.type = BodyType.StaticBody;
@@ -110,8 +115,15 @@ public class GameArea implements Screen {
 	}
 
 	private void createBackgroundSprite() {
-		backgroundTexture = new Texture(
-				Gdx.files.internal("data/Pinball_Background.png"));
+		if (level.equals("Level 1.json")) {
+			backgroundTexture = new Texture(
+					Gdx.files.internal("data/Pinball_Background.png"));
+		}
+		else {
+			backgroundTexture = new Texture(
+					Gdx.files.internal("data/Pinball_Background2.png"));
+		}
+				
 		backgroundTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
 		backgroundSprite = new Sprite(backgroundTexture);
@@ -194,7 +206,6 @@ public class GameArea implements Screen {
 				.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
 		scoreFont.setScale(0.2f);
-
 		scoreFont.draw(batcher, scoreText, 23, 85);
 
 		// Draw the bumpers
@@ -278,6 +289,7 @@ public class GameArea implements Screen {
 		scoreText = "score: 0";
 		scoreFont = new BitmapFont(Gdx.files.internal("data/score.fnt"), false);
 		scoreFont.setColor(Color.RED);
+		layout = FieldLayout.layoutForLevel(level, world);
 
 		createBackgroundPhysic();
 		Physic.createCollisionListener(world);
@@ -291,13 +303,21 @@ public class GameArea implements Screen {
 				camera.viewportHeight * .5f, 0f);
 		camera.update();
 
-		layout = FieldLayout.layoutForLevel(level, world);
 
 		GameState.getInstance().setTotalBalls(layout.getNumberOfBalls());
 		createBackgroundSprite();
 		GameState.getInstance().startNewGame();
 		setBall();
+		Gdx.input.getTextInput(new TextInputListener() {
+			@Override
+			public void input(String text) {
+				playername = text;
+			}
 
+			@Override
+			public void canceled() {
+			}
+		}, "enter your name", "");
 		// debugRenderer = new Box2DDebugRenderer();
 	}
 
@@ -309,68 +329,48 @@ public class GameArea implements Screen {
 
 	private void gameOver() {
 		highscore = GameState.getInstance().getScore();
-		highscoreCheck();
+		if (highscore != 0) highscoreCheck();
 		isInputDone = true;
 		Gdx.app.log("gamestate: ", "GAMEOVER!!!");
 		Gdx.app.log("endscore: ", highscore + "");
+		game.setScreen(new Menu(game));
 	}
 
+	@org.junit.Test
 	public void highscoreCheck() {
+		String[][] arrays = new String[NUMBER_OF_HIGHSCORES+1][2];
+		
 		try {
-
 			InputStream ips = fhin.read();
-
 			BufferedReader br = new BufferedReader(new InputStreamReader(ips));
 			String line;
 			String[] values;
-			for (int i = 0; i < NUMBER_OF_HIGHSCORES; i++) {
-				if ((line = br.readLine()) == null && highscore != 0) {
+			arrays[0][0] = "0";
+			for (int i = 1; (i <= NUMBER_OF_HIGHSCORES && (line = br.readLine()) != null); i++) {
+				values = line.split(",");
+				arrays[i][0] = values[0];
+				arrays[i][1] = values[1];
+//				System.out.println("i: "+i+"; "+arrays[i][0]+","+arrays[i][1]);
+			}
+			for (int k = 0; k < NUMBER_OF_HIGHSCORES; k++) {
+			long score = Long.parseLong(arrays[k+1][0]);
+			if (score > highscore.longValue()){
+				arrays[k][0] = arrays[k+1][0];
+				arrays[k][1] = arrays[k+1][1];
+			}
+			else {
+				arrays[k][0] = highscore.toString();
+				arrays[k][1] = playername;
+				break;
+			}
+//			System.out.println("k: "+k+"; "+arrays[k][0]+","+arrays[k][1]);
 
-					Gdx.input.getTextInput(new TextInputListener() {
-						@Override
-						public void input(String text) {
-							playerName = text;
-							System.out.println("new Highscore! " + highscore
-									+ "," + playerName);
-							fhout.writeString(highscore + "," + playerName + "\n",
-									true);
-
-							game.setScreen(new Menu(game));
-						}
-
-						@Override
-						public void canceled() {
-							break;
-						}
-					}, "enter your name", "");
-					break;
-				} else {
-					values = line.split(",");
-					long score = Long.parseLong(values[0]);
-
-					if (score < highscore.longValue()) {
-						Gdx.input.getTextInput(new TextInputListener() {
-							@Override
-							public void input(String text) {
-								playerName = text;
-								fhout.writeString(highscore + "," + playerName + "\n",
-										true);
-								System.out.println("new Highscore! "
-										+ highscore + "," + playerName);
-								game.setScreen(new Menu(game));
-							}
-
-							@Override
-							public void canceled() {
-								break;
-							}
-						}, "enter your name", "");
-
-						break;
-					}
-				}
 			}
 			br.close();
+
+			System.out.println("New Highscore by " + playername + ": " + highscore +"!");
+			fhout.writeString(arrays[0][0]+ "," + arrays[0][1] + "\n" + arrays[1][0]+ "," + arrays[1][1] + "\n"+ arrays[2][0]+ "," + arrays[2][1] + "\n"+ arrays[3][0]+ "," + arrays[3][1] + "\n"+ arrays[4][0]+ "," + arrays[4][1] + "\n", false);
+
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
