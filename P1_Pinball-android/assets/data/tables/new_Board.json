@@ -1,0 +1,34 @@
+	{
+		"gravity": 9.81,
+		"numballs": 1,
+		"ballradius": 1,
+		"ballcolor": [22, 22, 224],
+		"launch": {"position": [50, 2.5], "velocity": [0, 0], "deadzone": [18.8, 0, 20, 1.4]},
+		
+		"elements": [
+
+			{"class": "SlingshotElement", "position": [34.5, 13.5], "length": [7.7, 14.5], "kick": 80},
+			{"class": "SlingshotElement", "position": [12.7, 13.5], "length": [-7.7, 14.5], "kick": 80},
+		],
+		  
+		  "flippers": [
+        	{
+        		"position": [12.35, 9.2],
+        		"length": 9.0,
+        		"minangle": -20,
+        		"maxangle": 20,
+        		"upspeed": 100,
+        		"downspeed": 100
+        	},
+        	{
+        		"position": [34.35, 9.2],
+        		"length": -9.0,
+        		"minangle": -20,
+        		"maxangle": 20,
+        		"upspeed": 100,
+        		"downspeed": 100
+        	}
+        ]        
+        
+	}	
+
