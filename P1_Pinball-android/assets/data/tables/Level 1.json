@@ -1,0 +1,45 @@
+	{
+		"gravity": 9.81,
+		"numballs": 1,
+		"ballradius": 1,
+		"ballcolor": [22, 22, 224],
+		"launch": {"position": [50, 2.5], "velocity": [0, 61], "deadzone": [18.8, 0, 22, 0]},
+		
+		"elements": [
+		"bumpers below top lanes",
+			
+			{"class": "BumperElement", "radius": 1.85, "position": [15, 55], "kick": 70.0, "color": [0, 0, 224], "score": 10},
+			{"class": "BumperElement", "radius": 1.85, "position": [17, 67], "kick": 60.0, "color": [0, 140, 224], "score": 20},
+			{"class": "BumperElement", "radius": 1.85, "position": [25, 60], "kick": 80.0, "color": [0, 140, 224], "score": 25},
+			{"class": "BumperElement", "radius": 1.85, "position": [32, 50], "kick": 90.0, "color": [0, 140, 224], "score": 30},
+			{"class": "BumperElement", "radius": 2.35, "position": [35, 65], "kick": 60.0, "color": [0, 0, 224], "score": 35},
+			"purple bumper is extra points",
+			{"class": "BumperElement", "radius": 2.00, "position": [13, 77.5], "kick": 70, "color": [192, 0, 192], "score": 200},			
+			{"class": "BumperElement", "radius": 2.20, "position": [38.5, 74.5], "kick": 70, "color": [192, 0, 192], "score": 100},
+
+			"slingshots",
+			{"class": "SlingshotElement", "position": [34.5, 13.5], "length": [7.7, 14.5], "kick": 50},
+			{"class": "SlingshotElement", "position": [12.7, 13.5], "length": [-7.7, 14.5], "kick": 50},
+		
+		],
+		  
+		  "flippers": [
+        	{
+        		"position": [12.35, 9.2],
+        		"length": 9.0,
+        		"minangle": -25,
+        		"maxangle": 20,
+        		"upspeed": 100,
+        		"downspeed": 100
+        	},
+        	{
+        		"position": [34.35, 9.2],
+        		"length": -9.0,
+        		"minangle": -25,
+        		"maxangle": 20,
+        		"upspeed": 100,
+        		"downspeed": 100
+        	}
+        ]        
+        
+	}	

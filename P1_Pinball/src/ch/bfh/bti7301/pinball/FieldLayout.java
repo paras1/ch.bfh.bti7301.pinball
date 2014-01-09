@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import ch.bfh.bti7301.pinball.elements.FieldElement;
 import ch.bfh.bti7301.pinball.elements.FlipperElement;
@@ -31,7 +32,12 @@ public class FieldLayout {
 	
 	static int _numLevels = -1;
 	static Map<Object, Map> _layoutMap = new HashMap();
-
+	Random randomno = new Random();
+	float random = randomno.nextFloat();
+    // check next float value  
+	
+	//random = random.nextFloat();
+//	System.out.println("Next float value: ");
 	
 	public static Map readFieldLayout(String  name, boolean isGame) {
 		try {
@@ -147,6 +153,7 @@ public class FieldLayout {
 		List<Number> velocity = (List<Number>)launchMap.get("velocity");
 		float vx = velocity.get(0).floatValue();
 		float vy = velocity.get(1).floatValue();
+		vy = vy + random;
 		
 		return Arrays.asList(vx, vy);
 	}
