@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.json.JSONObject;
 
@@ -49,11 +51,15 @@ public class EditorScreen implements Screen
 	Label lbGravity;
 	Label lbLauncherSpeed;
 	Label lbNumBumpers;
+	Label lbFlipperSpeed;
+	Label lbSlingshot;
 	TextField tfLevelName;
 	Slider slNumBalls;
 	Slider slGravity;
 	Slider slLauncherSpeed;
 	Slider slNumBumpers;
+	Slider slFlipperSpeed;
+	Slider slSlingshot;
 	
 	final String level = "";
 
@@ -131,6 +137,30 @@ public class EditorScreen implements Screen
 		table.add(lbLauncherSpeed).width(190).height(50).padTop(10);
 		table.add(slLauncherSpeed).width(230).height(50).padTop(10);
 		table.row();
+		
+		lbFlipperSpeed = new Label("Flipper speed:   5", Assets.skin);
+		slFlipperSpeed = new Slider(5, 200, 5, false, Assets.skin);
+		slFlipperSpeed.addListener(new ChangeListener() {
+			public void changed(ChangeEvent event, Actor actor) {
+				lbFlipperSpeed.setText("Flipper speed:   "+(int)slFlipperSpeed.getValue());
+			}
+		});
+		
+		table.add(lbFlipperSpeed).width(190).height(50).padTop(10);
+		table.add(slFlipperSpeed).width(230).height(50).padTop(10);
+		table.row();
+		
+		lbSlingshot = new Label("Slingshot speed:   5", Assets.skin);
+		slSlingshot = new Slider(5, 200, 5, false, Assets.skin);
+		slSlingshot.addListener(new ChangeListener() {
+			public void changed(ChangeEvent event, Actor actor) {
+				lbSlingshot.setText("Slingshot speed:   "+(int)slSlingshot.getValue());
+			}
+		});
+		
+		table.add(lbSlingshot).width(190).height(50).padTop(10);
+		table.add(slSlingshot).width(230).height(50).padTop(10);
+		table.row();
 
 		btCreateBoard = new TextButton("Create new pinballboard", Assets.skin);
 		
@@ -144,12 +174,30 @@ public class EditorScreen implements Screen
 				EditorBuffer.getInstance().setLauncherSpeed((int)slLauncherSpeed.getValue());
 				EditorBuffer.getInstance().setMpNewBoardBuffer(FieldLayout.readFieldLayout(level, true));
 				EditorBuffer.getInstance().putMpNewBoardBufferElement("numballs", (int)slNumBalls.getValue());
+				EditorBuffer.getInstance().setFlipperSpeed((int)slFlipperSpeed.getValue());
+				EditorBuffer.getInstance().setSlingshotSpeed((int)slSlingshot.getValue());
+
+	    		
+	    		ArrayList<HashMap> alFlipper = EditorBuffer.getInstance().getAlFlipperBuffer();
+	    		for(HashMap mpFlipper : alFlipper){
+		    		mpFlipper.put("upspeed", EditorBuffer.getInstance().getFlipperSpeed());
+		    		mpFlipper.put("downspeed", EditorBuffer.getInstance().getFlipperSpeed());
+	    		}
+	    		
+	    		ArrayList<HashMap> alElements = EditorBuffer.getInstance().getAlElementsBuffer();
+	    		for(HashMap mpElement : alElements){
+	    			if(mpElement.containsKey("class") && mpElement.get("class").equals("SlingshotElement")){
+	    				mpElement.put("kick", EditorBuffer.getInstance().getSlingshotSpeed());
+	    			}
+	    		}
+
 				ArrayList alLauncherSpeed = new ArrayList();
 				alLauncherSpeed.add(0);
 				alLauncherSpeed.add((int)slLauncherSpeed.getValue());
 				EditorBuffer.getInstance().putMpLaunchBufferElement("velocity", alLauncherSpeed);
 				System.out.println(new JSONObject(EditorBuffer.getInstance().getMpNewBoardBuffer()));
 				System.out.println(new JSONObject(EditorBuffer.getInstance().getMpLaunchBuffer()));
+//				System.out.println(new JSONObject(EditorBuffer.getInstance().getMpFlipperBuffer()));
 				try {
 					FileHandle newBoard = Gdx.files.local("local/tables/"+EditorBuffer.getInstance().getLevelname()+".json");
 					System.out.println(newBoard.path());
