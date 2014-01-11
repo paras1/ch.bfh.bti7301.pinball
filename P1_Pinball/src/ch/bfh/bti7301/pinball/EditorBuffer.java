@@ -4,7 +4,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.json.JSONException;
@@ -13,12 +12,12 @@ import org.json.JSONObject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
-import sun.tools.tree.ThisExpression;
 
 public class EditorBuffer {
 
 	private Map mpNewBoardBuffer = new HashMap();
 	private ArrayList<Map> alElementsBuffer = new ArrayList();
+	private ArrayList<Map> alFlipperBuffer = new ArrayList();
 	private Map mpLaunchBuffer = new HashMap();
 	private int numBumpers = 0;
 	private int actualBumperNum = 0;
@@ -28,6 +27,8 @@ public class EditorBuffer {
 	private String levelname = "";
 	private int numBalls = 0;
 	private int launcherSpeed = 0;
+	private int flipperSpeed = 0;
+	private int slingshotSpeed = 0;
 
 
 	private static EditorBuffer instance = null;
@@ -49,6 +50,8 @@ public class EditorBuffer {
 		System.out.println(getAlElementsBuffer());
 		setMpLaunchBuffer((HashMap)mpNewBoardBuffer.get("launch"));
 		System.out.println(getMpLaunchBuffer());
+		setAlFlipperBuffer((ArrayList)mpNewBoardBuffer.get("flippers"));
+		System.out.println(getAlFlipperBuffer());
 	}
 	
 	public void putMpNewBoardBufferElement(Object key, Object value) {
@@ -79,6 +82,19 @@ public class EditorBuffer {
 	public void putMpLaunchBufferElement(Object key, Object value) {
 		this.mpLaunchBuffer.put(key, value);
 	}
+	
+	public ArrayList getAlFlipperBuffer() {
+		return alFlipperBuffer;
+	}
+
+	public void setAlFlipperBuffer(ArrayList alFlipperBuffer) {
+		this.alFlipperBuffer = alFlipperBuffer;
+	}
+	
+	public void addAlFlipperBufferElement(Map map) {
+		
+		this.alFlipperBuffer.add(map);
+	}
 
 	public String getLevelname() {
 		return levelname;
@@ -102,6 +118,22 @@ public class EditorBuffer {
 
 	public void setLauncherSpeed(int launcherSpeed) {
 		this.launcherSpeed = launcherSpeed;
+	}
+	
+	public int getFlipperSpeed() {
+		return flipperSpeed;
+	}
+
+	public void setFlipperSpeed(int flipperSpeed) {
+		this.flipperSpeed = flipperSpeed;
+	}
+	
+	public int getSlingshotSpeed() {
+		return slingshotSpeed;
+	}
+
+	public void setSlingshotSpeed(int slingshotSpeed) {
+		this.slingshotSpeed = slingshotSpeed;
 	}
 
 	public int getNumBumpers() {

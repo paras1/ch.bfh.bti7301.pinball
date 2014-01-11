@@ -249,12 +249,16 @@ public class GameArea implements Screen {
     	if(isTouchable){
 			if(Gdx.input.isTouched()){
 				//check if the right bottom place of the screen is touched(ball start position)
-				if(Gdx.input.getX()>Gdx.graphics.getWidth()-45 && Gdx.input.getY()>Gdx.graphics.getHeight()-65){
+				if(Gdx.input.getX()>Gdx.graphics.getWidth()-85 && Gdx.input.getY()>Gdx.graphics.getHeight()-105){
 					ballBody.setLinearVelocity(new Vector2(velocity.get(0), velocity.get(1)));
 					isTouchable = false;
 					sound.playBall();
 				}
 			}
+    	}
+    	//if the ball is back in the launchpanel, isTochable=true that the user can launch the ball again
+    	if(ballBody.getPosition().x>45){
+    		isTouchable=true;
     	}
     	//check if ball is in "deadzone" position of ball < 0 in y screen axis
         if(ballBody.getPosition().y < 0){
