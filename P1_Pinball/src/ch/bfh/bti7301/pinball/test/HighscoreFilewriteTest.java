@@ -15,7 +15,7 @@ public class HighscoreFilewriteTest {
 	@Test
 	public void readHighscoreTest() throws IOException {
 		PinballGame game = new PinballGame();
-		GameArea gameA = new GameArea(game,"Level 1.json");
+		GameArea gameA = new GameArea(game,"Level 1.json", false);
 		
 		gameA.highscoreCheck();
 		HighscoreScreen hss = new HighscoreScreen(game); 
