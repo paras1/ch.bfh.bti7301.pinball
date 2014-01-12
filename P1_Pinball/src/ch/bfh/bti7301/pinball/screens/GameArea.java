@@ -147,7 +147,6 @@ public class GameArea implements Screen {
     	
 		ballBody = Physic.createCircle(world, position.get(0).floatValue(), position.get(1).floatValue(), radius, false);
 		ballBody.setBullet(true);
-//		VPSoundpool.playBall();
     }
     
     /** Draws the ball sprite
@@ -201,7 +200,7 @@ public class GameArea implements Screen {
 
         //Draw the background
         backgroundSprite.draw(batcher);
-      //setting linear filtering
+        //setting linear filtering
         scoreFont.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
         scoreFont.setScale(0.2f);
@@ -221,7 +220,6 @@ public class GameArea implements Screen {
 	        if(flippers.get(i) instanceof FlipperElement){
 	        	FlipperElement flipper = (FlipperElement)flippers.get(i);
 	        	flipper.drawFlipper().draw(batcher);
-//	        	flipper.getSprite().draw(batcher);
 	        }
         }
 
@@ -229,10 +227,6 @@ public class GameArea implements Screen {
 		getBallSprite().draw(batcher);   
 
 		batcher.end();
-		
-		//find objects that collide in our pinballworld during rendering process
-//		Physic.doCollisionDetection(world);
-
 
 		//if the screen is touched, the ballbody will be accelerated(launched)
     	List<Float> velocity = layout.getLaunchVelocity(); 
@@ -275,7 +269,6 @@ public class GameArea implements Screen {
         	}
         	isTouchable = true;
         }
-//        debugRenderer.render(world, camera.combined);  
    
 	}
 
@@ -318,7 +311,13 @@ public class GameArea implements Screen {
         state.startNewGame();
         sound.playStart();
         setBall();
-//        debugRenderer = new Box2DDebugRenderer();
+        Gdx.input.getTextInput(new TextInputListener() {
+			public void input(String text) {
+				playername = text;
+			}
+ 			public void canceled() {
+			}
+		}, "enter your name", "");
 	}
 
 	@Override
@@ -351,7 +350,6 @@ public class GameArea implements Screen {
 				values = line.split(",");
 				arrays[i][0] = values[0];
 				arrays[i][1] = values[1];
-//				System.out.println("i: "+i+"; "+arrays[i][0]+","+arrays[i][1]);
 			}
 			for (int k = 0; k < NUMBER_OF_HIGHSCORES; k++) {
 			long score = Long.parseLong(arrays[k+1][0]);
@@ -364,7 +362,6 @@ public class GameArea implements Screen {
 				arrays[k][1] = playername;
 				break;
 			}
-//			System.out.println("k: "+k+"; "+arrays[k][0]+","+arrays[k][1]);
 
 			}
 			br.close();
