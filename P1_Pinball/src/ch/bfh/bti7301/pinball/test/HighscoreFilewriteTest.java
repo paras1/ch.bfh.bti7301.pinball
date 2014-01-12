@@ -11,7 +11,7 @@ import ch.bfh.bti7301.pinball.screens.HighscoreScreen;
 import ch.bfh.bti7301.pinball.screens.PinballGame;
 
 public class HighscoreFilewriteTest {
-/*
+
 	@Test
 	public void readHighscoreTest() throws IOException {
 		PinballGame game = new PinballGame();
@@ -21,5 +21,5 @@ public class HighscoreFilewriteTest {
 		HighscoreScreen hss = new HighscoreScreen(game); 
 		hss.ReadFile();
 	}
-*/
+
 }

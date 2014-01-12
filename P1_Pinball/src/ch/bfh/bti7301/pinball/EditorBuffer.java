@@ -12,7 +12,6 @@ import org.json.JSONObject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
-
 public class EditorBuffer {
 
 	private Map mpNewBoardBuffer = new HashMap();
@@ -23,41 +22,40 @@ public class EditorBuffer {
 	private int actualBumperNum = 0;
 	private float actualBumperRadius = 5f;
 	private int actualBumperKick = 0;
-	private int	actualBumperPoints = 0;
+	private int actualBumperPoints = 0;
 	private String levelname = "";
 	private int numBalls = 0;
 	private int launcherSpeed = 0;
 	private int flipperSpeed = 0;
 	private int slingshotSpeed = 0;
 
-
 	private static EditorBuffer instance = null;
-	
-	public static EditorBuffer getInstance(){
-		 if(instance == null) {
-	         instance = new EditorBuffer();
-	     }
-	     return instance;
+
+	public static EditorBuffer getInstance() {
+		if (instance == null) {
+			instance = new EditorBuffer();
+		}
+		return instance;
 	}
-	
+
 	public Map getMpNewBoardBuffer() {
 		return mpNewBoardBuffer;
 	}
 
 	public void setMpNewBoardBuffer(Map mpNewBoardBuffer) {
 		this.mpNewBoardBuffer = mpNewBoardBuffer;
-		setAlElementsBuffer((ArrayList)mpNewBoardBuffer.get("elements"));
+		setAlElementsBuffer((ArrayList) mpNewBoardBuffer.get("elements"));
 		System.out.println(getAlElementsBuffer());
-		setMpLaunchBuffer((HashMap)mpNewBoardBuffer.get("launch"));
+		setMpLaunchBuffer((HashMap) mpNewBoardBuffer.get("launch"));
 		System.out.println(getMpLaunchBuffer());
-		setAlFlipperBuffer((ArrayList)mpNewBoardBuffer.get("flippers"));
+		setAlFlipperBuffer((ArrayList) mpNewBoardBuffer.get("flippers"));
 		System.out.println(getAlFlipperBuffer());
 	}
-	
+
 	public void putMpNewBoardBufferElement(Object key, Object value) {
 		this.mpNewBoardBuffer.put(key, value);
 	}
-	
+
 	public ArrayList getAlElementsBuffer() {
 		return alElementsBuffer;
 	}
@@ -65,9 +63,9 @@ public class EditorBuffer {
 	public void setAlElementsBuffer(ArrayList alElementsBuffer) {
 		this.alElementsBuffer = alElementsBuffer;
 	}
-	
+
 	public void addAlElementsBufferElement(Map map) {
-		
+
 		this.alElementsBuffer.add(map);
 	}
 
@@ -78,11 +76,11 @@ public class EditorBuffer {
 	public void setMpLaunchBuffer(Map mpLaunchBuffer) {
 		this.mpLaunchBuffer = mpLaunchBuffer;
 	}
-	
+
 	public void putMpLaunchBufferElement(Object key, Object value) {
 		this.mpLaunchBuffer.put(key, value);
 	}
-	
+
 	public ArrayList getAlFlipperBuffer() {
 		return alFlipperBuffer;
 	}
@@ -90,9 +88,9 @@ public class EditorBuffer {
 	public void setAlFlipperBuffer(ArrayList alFlipperBuffer) {
 		this.alFlipperBuffer = alFlipperBuffer;
 	}
-	
+
 	public void addAlFlipperBufferElement(Map map) {
-		
+
 		this.alFlipperBuffer.add(map);
 	}
 
@@ -119,7 +117,7 @@ public class EditorBuffer {
 	public void setLauncherSpeed(int launcherSpeed) {
 		this.launcherSpeed = launcherSpeed;
 	}
-	
+
 	public int getFlipperSpeed() {
 		return flipperSpeed;
 	}
@@ -127,7 +125,7 @@ public class EditorBuffer {
 	public void setFlipperSpeed(int flipperSpeed) {
 		this.flipperSpeed = flipperSpeed;
 	}
-	
+
 	public int getSlingshotSpeed() {
 		return slingshotSpeed;
 	}
@@ -159,8 +157,7 @@ public class EditorBuffer {
 	public void setActualBumperRadius(float actualBumperRadius) {
 		this.actualBumperRadius = actualBumperRadius;
 	}
-	
-	
+
 	public int getActualBumperKick() {
 		return actualBumperKick;
 	}
@@ -178,10 +175,11 @@ public class EditorBuffer {
 	}
 
 	public void JSONWriter() {
-		
+
 		JSONObject jsob = new JSONObject(getMpNewBoardBuffer());
-		
-		FileHandle fh = Gdx.files.local("local/tables/"+getLevelname()+".json");
+
+		FileHandle fh = Gdx.files.local("local/tables/" + getLevelname()
+				+ ".json");
 		String filename = fh.file().getAbsolutePath();
 		System.out.println(filename);
 		FileWriter file;
@@ -191,11 +189,9 @@ public class EditorBuffer {
 			file.flush();
 			file.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
 	}
 }

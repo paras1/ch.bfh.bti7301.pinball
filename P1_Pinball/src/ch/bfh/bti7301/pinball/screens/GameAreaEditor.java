@@ -54,125 +54,126 @@ import com.badlogic.gdx.scenes.scene2d.utils.Align;
 /**
  * This Class draws the GameAreaEditor
  * 
- *
+ * 
  * @author Sathesh Paramasamy
  * @version 1.0
  */
 public class GameAreaEditor implements Screen {
-	
-    private World world;  
-    private Box2DDebugRenderer debugRenderer;  
-    private OrthographicCamera camera;  
-    private static final float BOX_STEP=1/60f;  
-    private static final int BOX_VELOCITY_ITERATIONS=8;  
-    private static final int BOX_POSITION_ITERATIONS=3; 
-    private static final float BACKGROUND_WIDTH = 506/10;
-    private FieldLayout layout;
-    
+
+	private World world;
+	private Box2DDebugRenderer debugRenderer;
+	private OrthographicCamera camera;
+	private static final float BOX_STEP = 1 / 60f;
+	private static final int BOX_VELOCITY_ITERATIONS = 8;
+	private static final int BOX_POSITION_ITERATIONS = 3;
+	private static final float BACKGROUND_WIDTH = 506 / 10;
+	private FieldLayout layout;
+
 	private Body backgroundModel;
 	private Texture backgroundTexture;
 	private Sprite backgroundSprite;
 	private Texture texture;
 	private Sprite bumperSprite;
-	
+
 	private String scoreText;
 	BitmapFont scoreFont;
 	String playerName;
 	private boolean isInputDone = false;
-	
 
- 
-	//things needed to draw
+	// things needed to draw
 	private Stage stage;
 	private SpriteBatch batcher;
 	private Pixmap pixmap;
 	private Body ballBody;
 	private Body bumperBody;
 	private Body slingshotBody;
-    
+
 	private PinballGame game;
-	
+
 	private boolean isTouchable;
 	private boolean isNewBumperVisible;
 	String level;
-	
+
 	private TextButton tbNext;
 	private TextButton tbBack;
-	
+
 	private Map mpActualBumper = new HashMap();
 	private ArrayList alBumperColor1 = new ArrayList();
 	private ArrayList<Float> alBumperPosition = new ArrayList<Float>();
-	
+
 	private Dialog dialog;
 
+	// constructor to keep a reference to the main Game class
+	public GameAreaEditor(PinballGame game, String level) {
+		this.game = game;
+		this.level = level;
+	}
 
+	private void createBackgroundPhysic() {
+		// Create a loader for the file saved from the editor.
+		BodyEditorLoader loader = new BodyEditorLoader(
+				Gdx.files.internal("data/pinballbody.json"));
 
-    // constructor to keep a reference to the main Game class
-     public GameAreaEditor(PinballGame game, String level){
-             this.game = game;
-             this.level = level;
-     }
-     
-     private void createBackgroundPhysic() {
- 		//Create a loader for the file saved from the editor.
- 		BodyEditorLoader loader = new BodyEditorLoader(Gdx.files.internal("data/pinballbody.json"));
+		// Create a BodyDef, as usual.
+		BodyDef bd = new BodyDef();
+		bd.type = BodyType.StaticBody;
 
- 		//Create a BodyDef, as usual.
- 		BodyDef bd = new BodyDef();
- 		bd.type = BodyType.StaticBody;
+		// Create a FixtureDef, as usual.
+		FixtureDef fd = new FixtureDef();
+		fd.density = 1;
+		fd.friction = 0.5f;
+		fd.restitution = 0.3f;
 
- 		//Create a FixtureDef, as usual.
- 		FixtureDef fd = new FixtureDef();
- 		fd.density = 1;
- 		fd.friction = 0.5f;
- 		fd.restitution = 0.3f;
+		// Create a Body, as usual.
+		backgroundModel = world.createBody(bd);
 
- 		//Create a Body, as usual.
- 		backgroundModel = world.createBody(bd);
+		// Create the body fixture automatically by using the loader.
+		loader.attachFixture(backgroundModel, "gamearea", fd, BACKGROUND_WIDTH);
+	}
 
- 		//Create the body fixture automatically by using the loader.
- 		loader.attachFixture(backgroundModel, "gamearea", fd, BACKGROUND_WIDTH);
- 	}
-     
-     private void createBackgroundSprite() {
-    	 backgroundTexture = new Texture(Gdx.files.internal("data/Pinball_Background.png"));
-    	 backgroundTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+	private void createBackgroundSprite() {
+		backgroundTexture = new Texture(
+				Gdx.files.internal("data/Pinball_Background.png"));
+		backgroundTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
-    	 backgroundSprite = new Sprite(backgroundTexture);
-    	 backgroundSprite.setPosition(0, 0);
-    	 backgroundSprite.setSize(506/10, 890/10 );
-     }
+		backgroundSprite = new Sprite(backgroundTexture);
+		backgroundSprite.setPosition(0, 0);
+		backgroundSprite.setSize(506 / 10, 890 / 10);
+	}
 
+	/**
+	 * Draws a new ball and its physic and set it to the Box2d World. The
+	 * position and velocity of the ball are controlled by the "launch" key in
+	 * the field layout JSON.
+	 */
+	public void setBall() {
+		List<Number> position = layout.getLaunchPosition();
+		float radius = layout.getBallRadius();
 
- 	
-    /** Draws a new ball and its physic and set it to the Box2d World.
-     * The position and velocity of the ball are controlled by the "launch" key in the field layout JSON.
-     */
-    public  void setBall() {
-    	List<Number> position = layout.getLaunchPosition();
-    	float radius = layout.getBallRadius();
-    	
-		ballBody = Physic.createCircle(world, position.get(0).floatValue(), position.get(1).floatValue(), radius, false);
+		ballBody = Physic.createCircle(world, position.get(0).floatValue(),
+				position.get(1).floatValue(), radius, false);
 		ballBody.setBullet(true);
-//		VPSoundpool.playBall();
-    }
-    
-    /** Draws the ball sprite
-     */
-    public Sprite getBallSprite(){
+	}
+
+	/**
+	 * Draws the ball sprite
+	 */
+	public Sprite getBallSprite() {
 		Sprite ballSprite = new Sprite(new Texture("data/kugel1.png"));
 		ballSprite.setSize(3f, 3f);
-		ballSprite.setOrigin(ballSprite.getWidth()/2, ballSprite.getHeight()/2);
-		ballSprite.setPosition(ballBody.getPosition().x - ballSprite.getWidth()/2, ballBody.getPosition().y - ballSprite.getHeight()/2);
-		ballSprite.setRotation(ballBody.getAngle() * MathUtils.radiansToDegrees);
-		
+		ballSprite.setOrigin(ballSprite.getWidth() / 2,
+				ballSprite.getHeight() / 2);
+		ballSprite.setPosition(ballBody.getPosition().x - ballSprite.getWidth()
+				/ 2, ballBody.getPosition().y - ballSprite.getHeight() / 2);
+		ballSprite
+				.setRotation(ballBody.getAngle() * MathUtils.radiansToDegrees);
+
 		return ballSprite;
-    }
-    
+	}
 
 	@Override
 	public void dispose() {
-		//dispose any object you created to free up the memory
+		// dispose any object you created to free up the memory
 		backgroundTexture.dispose();
 		batcher.dispose();
 	}
@@ -181,7 +182,6 @@ public class GameAreaEditor implements Screen {
 	public void resize(int width, int height) {
 	}
 
-	
 	@Override
 	public void pause() {
 	}
@@ -192,186 +192,209 @@ public class GameAreaEditor implements Screen {
 
 	@Override
 	public void render(float delta) {
-//		
-        GL10 gl = Gdx.gl10;
+		//
+		GL10 gl = Gdx.gl10;
 		gl.glClearColor(0, 0, 0, 1);
-		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);  
-        world.step(BOX_STEP, BOX_VELOCITY_ITERATIONS, BOX_POSITION_ITERATIONS); 
-        
-        List flippers = layout.getFlipperElements();
-        List elements = layout.getFieldElements();
-         
-		//start the batcher, so we would want to do all of our draw calls between batcher.begin and .end
+		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		world.step(BOX_STEP, BOX_VELOCITY_ITERATIONS, BOX_POSITION_ITERATIONS);
+
+		List flippers = layout.getFlipperElements();
+		List elements = layout.getFieldElements();
+
+		// start the batcher, so we would want to do all of our draw calls
+		// between batcher.begin and .end
 		batcher.setProjectionMatrix(camera.combined);
-        batcher.begin();
-        
-        
-        scoreText = "Score: "+GameState.getInstance().getScore();
+		batcher.begin();
 
-        //Draw the background
-        backgroundSprite.draw(batcher);
-      //setting linear filtering
-        scoreFont.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		scoreText = "Score: " + GameState.getInstance().getScore();
 
-        scoreFont.setScale(0.2f);
+		// Draw the background
+		backgroundSprite.draw(batcher);
+		// setting linear filtering
+		scoreFont.getRegion().getTexture()
+				.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
-        scoreFont.draw(batcher, scoreText, 23,85);
+		scoreFont.setScale(0.2f);
 
-        //Draw the bumpers
-        for(int i = 0; i<elements.size(); i++){
-	        if(elements.get(i) instanceof BumperElement){
-	        	BumperElement bump = (BumperElement)elements.get(i);
-	        	bump.getSprite().draw(batcher);
-	        }
-        }
-        
-    	//Draw the flippers
-        for(int i = 0; i<flippers.size(); i++){
-	        if(flippers.get(i) instanceof FlipperElement){
-	        	FlipperElement flipper = (FlipperElement)flippers.get(i);
-	        	flipper.drawFlipper().draw(batcher);
-	        }
-        }
+		scoreFont.draw(batcher, scoreText, 23, 85);
 
-    	if (isTouchable){
-	    	if(Gdx.input.isTouched() && Gdx.input.getY() < 750){
-	    		mpActualBumper.put("class", "BumperElement");
-	    		mpActualBumper.put("kick", EditorBuffer.getInstance().getActualBumperKick());
-	    		mpActualBumper.put("score", EditorBuffer.getInstance().getActualBumperPoints());
-	    		mpActualBumper.put("radius", EditorBuffer.getInstance().getActualBumperRadius());
-	    		
-	    		if (alBumperColor1.size()>0){
-		    		alBumperColor1.set(0,0);
-		    		alBumperColor1.set(1,0);
-		    		alBumperColor1.set(2,224);
-	    		} else {
-	    			alBumperColor1.add(0);
-		    		alBumperColor1.add(0);
-		    		alBumperColor1.add(224);
-	    		}
-	    		mpActualBumper.put("color", alBumperColor1);
-	    		
-	    		if (alBumperPosition.size()>0){
-		    		alBumperPosition.set(0, (float)Gdx.input.getX()/10);
-		    		alBumperPosition.set(1, (camera.viewportHeight-(float)Gdx.input.getY()/10));
-	    		} else {
-		    		alBumperPosition.add((float)Gdx.input.getX()/10);
-		    		alBumperPosition.add((camera.viewportHeight-(float)Gdx.input.getY()/10));
-	    		}
-	    		mpActualBumper.put("position", alBumperPosition);
-	    		System.out.println(mpActualBumper.toString());
-
-	    		System.out.println(EditorBuffer.getInstance().getActualBumperNum()+": "+layout.getFieldElements());
-
-	            System.out.println("GDX X:"+Gdx.input.getX());
-	            System.out.println("GDX Y:"+Gdx.input.getY());
-	            isNewBumperVisible = true;
-	    		
-	    	}
-	    	else{
-	    		
-	    	}
-	    	if (isNewBumperVisible) {
-	    		drawBumper(alBumperPosition.get(0), alBumperPosition.get(1), EditorBuffer.getInstance().getActualBumperRadius()).draw(batcher);
-	    	}
+		// Draw the bumpers
+		for (int i = 0; i < elements.size(); i++) {
+			if (elements.get(i) instanceof BumperElement) {
+				BumperElement bump = (BumperElement) elements.get(i);
+				bump.getSprite().draw(batcher);
+			}
 		}
-    	
-        
-    	batcher.end();
-    	
-    	stage.act(delta);
-    	stage.draw();
-   
+
+		// Draw the flippers
+		for (int i = 0; i < flippers.size(); i++) {
+			if (flippers.get(i) instanceof FlipperElement) {
+				FlipperElement flipper = (FlipperElement) flippers.get(i);
+				flipper.drawFlipper().draw(batcher);
+			}
+		}
+
+		if (isTouchable) {
+			if (Gdx.input.isTouched() && Gdx.input.getY() < 750) {
+				mpActualBumper.put("class", "BumperElement");
+				mpActualBumper.put("kick", EditorBuffer.getInstance()
+						.getActualBumperKick());
+				mpActualBumper.put("score", EditorBuffer.getInstance()
+						.getActualBumperPoints());
+				mpActualBumper.put("radius", EditorBuffer.getInstance()
+						.getActualBumperRadius());
+
+				if (alBumperColor1.size() > 0) {
+					alBumperColor1.set(0, 0);
+					alBumperColor1.set(1, 0);
+					alBumperColor1.set(2, 224);
+				} else {
+					alBumperColor1.add(0);
+					alBumperColor1.add(0);
+					alBumperColor1.add(224);
+				}
+				mpActualBumper.put("color", alBumperColor1);
+
+				if (alBumperPosition.size() > 0) {
+					alBumperPosition.set(0, (float) Gdx.input.getX() / 10);
+					alBumperPosition
+							.set(1, (camera.viewportHeight - (float) Gdx.input
+									.getY() / 10));
+				} else {
+					alBumperPosition.add((float) Gdx.input.getX() / 10);
+					alBumperPosition
+							.add((camera.viewportHeight - (float) Gdx.input
+									.getY() / 10));
+				}
+				mpActualBumper.put("position", alBumperPosition);
+				System.out.println(mpActualBumper.toString());
+
+				System.out.println(EditorBuffer.getInstance()
+						.getActualBumperNum()
+						+ ": "
+						+ layout.getFieldElements());
+
+				System.out.println("GDX X:" + Gdx.input.getX());
+				System.out.println("GDX Y:" + Gdx.input.getY());
+				isNewBumperVisible = true;
+
+			} else {
+
+			}
+			if (isNewBumperVisible) {
+				drawBumper(alBumperPosition.get(0), alBumperPosition.get(1),
+						EditorBuffer.getInstance().getActualBumperRadius())
+						.draw(batcher);
+			}
+		}
+
+		batcher.end();
+
+		stage.act(delta);
+		stage.draw();
+
 	}
 
 	@Override
 	public void show() {
 		stage = new Stage();
 		Gdx.input.setInputProcessor(stage);
-		
+
 		world = new World(new Vector2(0.0f, -20f), true);
 		isTouchable = true;
-		
+
 		scoreText = "score: 0";
-	    scoreFont = new BitmapFont(Gdx.files.internal("data/score.fnt"),false);
-	    scoreFont.setColor(Color.RED);
-	    
-        createBackgroundPhysic();
-        Physic.createCollisionListener(world);
-        
-        batcher = new SpriteBatch();
-        
-	    camera = new OrthographicCamera();
-        camera.viewportHeight = 900/10;  
-        camera.viewportWidth = 506/10;  
-        camera.position.set(camera.viewportWidth * .5f, camera.viewportHeight * .5f, 0f);  
-        camera.update();  
-        
-        layout = FieldLayout.layoutForLevel(level,world,false);
-        
-        GameState.getInstance().setTotalBalls(layout.getNumberOfBalls());
-        createBackgroundSprite();
-        GameState.getInstance().startNewGame();
-        setBall();
-        
-		if(EditorBuffer.getInstance().getActualBumperNum()<EditorBuffer.getInstance().getNumBumpers()){
+		scoreFont = new BitmapFont(Gdx.files.internal("data/score.fnt"), false);
+		scoreFont.setColor(Color.RED);
+
+		createBackgroundPhysic();
+		Physic.createCollisionListener(world);
+
+		batcher = new SpriteBatch();
+
+		camera = new OrthographicCamera();
+		camera.viewportHeight = 900 / 10;
+		camera.viewportWidth = 506 / 10;
+		camera.position.set(camera.viewportWidth * .5f,
+				camera.viewportHeight * .5f, 0f);
+		camera.update();
+
+		layout = FieldLayout.layoutForLevel(level, world, false);
+
+		GameState.getInstance().setTotalBalls(layout.getNumberOfBalls());
+		createBackgroundSprite();
+		GameState.getInstance().startNewGame();
+		setBall();
+
+		if (EditorBuffer.getInstance().getActualBumperNum() < EditorBuffer
+				.getInstance().getNumBumpers()) {
 			tbNext = new TextButton("NEXT", Assets.skin);
 		} else {
 			tbNext = new TextButton("SAVE", Assets.skin);
 		}
-        
-        tbNext.addListener(new InputListener() {
-			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-				EditorBuffer.getInstance().addAlElementsBufferElement(mpActualBumper);
-				if(EditorBuffer.getInstance().getActualBumperNum()<EditorBuffer.getInstance().getNumBumpers()){
-					EditorBuffer.getInstance().setActualBumperNum(EditorBuffer.getInstance().getActualBumperNum()+1);
+
+		tbNext.addListener(new InputListener() {
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
+				EditorBuffer.getInstance().addAlElementsBufferElement(
+						mpActualBumper);
+				if (EditorBuffer.getInstance().getActualBumperNum() < EditorBuffer
+						.getInstance().getNumBumpers()) {
+					EditorBuffer.getInstance()
+							.setActualBumperNum(
+									EditorBuffer.getInstance()
+											.getActualBumperNum() + 1);
 					EditorBuffer.getInstance().JSONWriter();
-					game.setScreen(new BumperEditorScreen(game, EditorBuffer.getInstance().getActualBumperNum()));
+					game.setScreen(new BumperEditorScreen(game, EditorBuffer
+							.getInstance().getActualBumperNum()));
 				} else {
 					EditorBuffer.getInstance().JSONWriter();
+
 					game.setScreen(new Menu(game));
 				}
-				
+
 				return true;
 			}
 		});
-        tbBack = new TextButton("BACK", Assets.skin);
-        
+		tbBack = new TextButton("BACK", Assets.skin);
 
-        Table table = new Table();
-        table.setFillParent(true);
-        table.bottom();
-        
-        table.add(tbBack).align(Align.left).width(120).height(40).padRight(220);
-        table.add(tbNext).align(Align.right).width(120).height(40);
-        
-        stage.addActor(table);
+		Table table = new Table();
+		table.setFillParent(true);
+		table.bottom();
+
+		table.add(tbBack).align(Align.left).width(120).height(40).padRight(220);
+		if (EditorBuffer.getInstance().getActualBumperNum() < EditorBuffer
+				.getInstance().getNumBumpers()) {
+			table.add(tbNext).align(Align.right).width(120).height(40);
+		} else {
+			table.add().width(120).height(40);
+		}
+
+		stage.addActor(table);
 	}
 
 	@Override
 	public void hide() {
-		// TODO Auto-generated method stub
-		
+
 	}
-	
-	
-    public Sprite drawBumper(Float posx, Float posy, Float radius){
-    	 
+
+	public Sprite drawBumper(Float posx, Float posy, Float radius) {
+
 		pixmap = new Pixmap(256, 256, Pixmap.Format.RGBA8888);
 		texture = new Texture(pixmap);
- 		//draw a yellow circle
- 		pixmap.setColor(1, 1, 0,1);
- 		pixmap.fillCircle(256/2,256/2,256/2);
-  
- 		texture.draw(pixmap, 0, 0);
- 		texture.bind();
- 		
- 		bumperSprite = new Sprite(texture);
- 		bumperSprite.setSize(radius*2, radius*2);
- 		bumperSprite.setPosition(posx-2, posy-2);
- 		
+		// draw a yellow circle
+		pixmap.setColor(1, 1, 0, 1);
+		pixmap.fillCircle(256 / 2, 256 / 2, 256 / 2);
+
+		texture.draw(pixmap, 0, 0);
+		texture.bind();
+
+		bumperSprite = new Sprite(texture);
+		bumperSprite.setSize(radius * 2, radius * 2);
+		bumperSprite.setPosition(posx - 2, posy - 2);
+
 		return bumperSprite;
-    	
-    }
+
+	}
 
 }

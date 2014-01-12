@@ -7,11 +7,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureWrap;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -19,21 +18,21 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 /**
- * The LevelScreen class is the View where you can choose one of your created GameAreas for playing.
+ * The LevelScreen class is the View where you can choose one of your created
+ * GameAreas for playing.
  * 
- *
+ * 
  * @author Dominik Reubi(reubd1@bfh.ch)
  * @version 1.0
  */
-public class LevelScreen implements Screen
-{
+public class LevelScreen implements Screen {
 	Stage stage;
 	SpriteBatch batch;
 	PinballGame game;
 	TextButton levelButton;
 	TextButton levelButton2;
 	final String level = "";
-	//Hintergrundbild
+	// Hintergrundbild
 	Texture backgroundImage;
 	SpriteBatch batcher;
 	SpriteBatch spriteBatchBack;
@@ -47,99 +46,97 @@ public class LevelScreen implements Screen
 
 	@Override
 	public void render(float delta) {
-		// TODO Auto-generated method stub
-		//Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
+
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		
-		//Hintergrundbild
+
+		// Hintergrundbild
 		spriteBatchBack = new SpriteBatch();
-	    spriteBatchBack.begin();
-	    sprite.draw(spriteBatchBack);
-	    spriteBatchBack.end();
+		spriteBatchBack.begin();
+		sprite.draw(spriteBatchBack);
+		spriteBatchBack.end();
 
 		stage.act(delta);
 		stage.draw();
-//		Table.drawDebug(stage);
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		//resize the stage to the new window size
-				stage.setViewport(width, height, false);
+		// resize the stage to the new window size
+		stage.setViewport(width, height, false);
 	}
 
 	@Override
 	public void show() {
-		// TODO Auto-generated method stub
 		stage = new Stage();
 		Gdx.input.setInputProcessor(stage);
 
-		//Hintergrundbild
-		Texture spriteTexture = new Texture(Gdx.files.internal("data/back2.png"));
-	    spriteTexture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
-	    sprite = new Sprite(spriteTexture, 0, 0, spriteTexture.getWidth(), spriteTexture.getHeight());
-	    sprite.setSize(width, height);
-		
-		FileHandle dirHandle;		
+		// Hintergrundbild
+		Texture spriteTexture = new Texture(
+				Gdx.files.internal("data/back2.png"));
+		spriteTexture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
+		sprite = new Sprite(spriteTexture, 0, 0, spriteTexture.getWidth(),
+				spriteTexture.getHeight());
+		sprite.setSize(width, height);
+
+		FileHandle dirHandle;
 		Table table = new Table(Assets.skin);
 		if (Gdx.app.getType() == ApplicationType.Android) {
-			  dirHandle = Gdx.files.internal("data/tables");
+			dirHandle = Gdx.files.internal("data/tables");
 		} else {
-		  // ApplicationType.Desktop ..
-		  dirHandle = Gdx.files.internal("./bin/data/tables");
+			// ApplicationType.Desktop ..
+			dirHandle = Gdx.files.internal("./bin/data/tables");
 		}
 
-		table.setFillParent(true);	
-		for (FileHandle entry: dirHandle.list()) {
-		   final String level = entry.file().getName();
-		   String levelname = level.substring(0, level.lastIndexOf('.'));
-		   if (!levelname.equals("new_Board")) {
-			   levelButton = new TextButton(levelname, Assets.skin);
-				
+		table.setFillParent(true);
+		for (FileHandle entry : dirHandle.list()) {
+			final String level = entry.file().getName();
+			String levelname = level.substring(0, level.lastIndexOf('.'));
+			if (!levelname.equals("new_Board")) {
+				levelButton = new TextButton(levelname, Assets.skin);
+
 				levelButton.addListener(new InputListener() {
-					public boolean touchDown(InputEvent event, float x, float y,
-							int pointer, int button) {
-						// TODO Auto-generated method stub
+					public boolean touchDown(InputEvent event, float x,
+							float y, int pointer, int button) {
 						game.setScreen(new GameArea(game, level, false));
-	
+
 						return true;
 					}
-	
+
 				});
-	
+
 				table.add(levelButton).width(350).height(150).padTop(50);
 				table.row();
-		   }
-		}
-		
-		if (Gdx.app.getType() == ApplicationType.Android) {
-			  dirHandle = Gdx.files.local("local/tables");
-		} else {
-		  // ApplicationType.Desktop ..
-		  dirHandle = Gdx.files.internal("local/tables");
+			}
 		}
 
-		table.setFillParent(true);	
-		for (FileHandle entry: dirHandle.list()) {
-		   final String level = entry.file().getName();
-		   String levelname = level.substring(0, level.lastIndexOf('.'));
-		   if (!levelname.equals("new_Board")) {
-			   levelButton2 = new TextButton(levelname+" (OWN)", Assets.skin);
-				
+		if (Gdx.app.getType() == ApplicationType.Android) {
+			dirHandle = Gdx.files.local("local/tables");
+		} else {
+			// ApplicationType.Desktop ..
+			dirHandle = Gdx.files.internal("local/tables");
+		}
+
+		table.setFillParent(true);
+		for (FileHandle entry : dirHandle.list()) {
+			final String level = entry.file().getName();
+			String levelname = level.substring(0, level.lastIndexOf('.'));
+			if (!levelname.equals("new_Board")) {
+				levelButton2 = new TextButton(levelname + " (OWN)", Assets.skin);
+
 				levelButton2.addListener(new InputListener() {
-					public boolean touchDown(InputEvent event, float x, float y,
-							int pointer, int button) {
+					public boolean touchDown(InputEvent event, float x,
+							float y, int pointer, int button) {
 						// TODO Auto-generated method stub
 						game.setScreen(new GameArea(game, level, true));
-	
+
 						return true;
 					}
-	
+
 				});
-	
+
 				table.add(levelButton2).width(350).height(150).padTop(50);
 				table.row();
-		   }
+			}
 		}
 
 		stage.addActor(table);
@@ -147,27 +144,21 @@ public class LevelScreen implements Screen
 
 	@Override
 	public void hide() {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void pause() {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void resume() {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
 
 	}
 }
-
-
