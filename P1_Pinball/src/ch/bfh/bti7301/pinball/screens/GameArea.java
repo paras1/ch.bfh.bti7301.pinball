@@ -73,7 +73,7 @@ public class GameArea implements Screen {
 	private PinballGame game;
 
 	private boolean isTouchable;
-	
+
 	private boolean isOwnBoard;
 	String level;
 	Long highscore;
@@ -84,17 +84,15 @@ public class GameArea implements Screen {
 	private FileHandle level2 = Gdx.files.internal("data/pinballbody2.json");
 	private FileHandle deci;
 
-
 	private void createBackgroundPhysic() {
 		// Create a loader for the file saved from the editor.
 		if (level.equals("Level 2.json")) {
 			deci = Gdx.files.internal("data/pinballbody2.json");
-			}
-		else {
+		} else {
 			deci = Gdx.files.internal("data/pinballbody.json");
 
 		}
-		
+
 		BodyEditorLoader loader = new BodyEditorLoader(deci);
 		// Create a BodyDef, as usual.
 		BodyDef bd = new BodyDef();
@@ -117,12 +115,11 @@ public class GameArea implements Screen {
 		if (level.equals("Level 2.json")) {
 			backgroundTexture = new Texture(
 					Gdx.files.internal("data/Pinball_Background2.png"));
-		}
-		else {
+		} else {
 			backgroundTexture = new Texture(
 					Gdx.files.internal("data/Pinball_Background.png"));
 		}
-				
+
 		backgroundTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
 		backgroundSprite = new Sprite(backgroundTexture);
@@ -130,36 +127,43 @@ public class GameArea implements Screen {
 		backgroundSprite.setSize(506 / 10, 890 / 10);
 	}
 
-    // constructor to keep a reference to the main Game class
-     public GameArea(PinballGame game, String level, boolean isOwnBoard){
-             this.game = game;
-             this.level = level;
-             this.isOwnBoard = isOwnBoard;
-     }
-     
-     
-    /** Draws a new ball and its physic and set it to the Box2d World.
-     * The position and velocity of the ball are controlled by the "launch" key in the field layout JSON.
-     */
-    public  void setBall() {
-    	List<Number> position = layout.getLaunchPosition();
-    	float radius = layout.getBallRadius();
-    	
-		ballBody = Physic.createCircle(world, position.get(0).floatValue(), position.get(1).floatValue(), radius, false);
+	// constructor to keep a reference to the main Game class
+	public GameArea(PinballGame game, String level, boolean isOwnBoard) {
+		this.game = game;
+		this.level = level;
+		this.isOwnBoard = isOwnBoard;
+	}
+
+	/**
+	 * Draws a new ball and its physic and set it to the Box2d World. The
+	 * position and velocity of the ball are controlled by the "launch" key in
+	 * the field layout JSON.
+	 */
+	public void setBall() {
+		List<Number> position = layout.getLaunchPosition();
+		float radius = layout.getBallRadius();
+
+		ballBody = Physic.createCircle(world, position.get(0).floatValue(),
+				position.get(1).floatValue(), radius, false);
 		ballBody.setBullet(true);
-    }
-    
-    /** Draws the ball sprite
-     */
-    public Sprite getBallSprite(){
+	}
+
+	/**
+	 * Draws the ball sprite
+	 */
+	public Sprite getBallSprite() {
 		Sprite ballSprite = new Sprite(new Texture("data/kugel3.png"));
 		ballSprite.setSize(3f, 3f);
-		ballSprite.setOrigin(ballSprite.getWidth()/2, ballSprite.getHeight()/2);
-		ballSprite.setPosition(ballBody.getPosition().x - ballSprite.getWidth()/2, ballBody.getPosition().y - ballSprite.getHeight()/2);
-		ballSprite.setRotation(ballBody.getAngle() * MathUtils.radiansToDegrees);
-		
+		ballSprite.setOrigin(ballSprite.getWidth() / 2,
+				ballSprite.getHeight() / 2);
+		ballSprite.setPosition(ballBody.getPosition().x - ballSprite.getWidth()
+				/ 2, ballBody.getPosition().y - ballSprite.getHeight() / 2);
+		ballSprite
+				.setRotation(ballBody.getAngle() * MathUtils.radiansToDegrees);
+
 		return ballSprite;
-    }
+	}
+
 	@Override
 	public void dispose() {
 		// dispose any object you created to free up the memory
@@ -193,83 +197,84 @@ public class GameArea implements Screen {
 		// start the batcher, so we would want to do all of our draw calls
 		// between batcher.begin and .end
 		batcher.setProjectionMatrix(camera.combined);
-        batcher.begin();
-        
-        
-        scoreText = "Score: "+state.getScore();
+		batcher.begin();
 
-        //Draw the background
-        backgroundSprite.draw(batcher);
-        //setting linear filtering
-        scoreFont.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		scoreText = "Score: " + state.getScore();
 
-        scoreFont.setScale(0.2f);
+		// Draw the background
+		backgroundSprite.draw(batcher);
+		// setting linear filtering
+		scoreFont.getRegion().getTexture()
+				.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
-        scoreFont.draw(batcher, scoreText, 23,85);
+		scoreFont.setScale(0.2f);
 
-        //Draw the bumpers
-        for(int i = 0; i<elements.size(); i++){
-	        if(elements.get(i) instanceof BumperElement){
-	        	BumperElement bump = (BumperElement)elements.get(i);
-	        	bump.getSprite().draw(batcher);
-	        }
-        }
-        
-    	//Draw the flippers
-        for(int i = 0; i<flippers.size(); i++){
-	        if(flippers.get(i) instanceof FlipperElement){
-	        	FlipperElement flipper = (FlipperElement)flippers.get(i);
-	        	flipper.drawFlipper().draw(batcher);
-	        }
-        }
+		scoreFont.draw(batcher, scoreText, 23, 85);
 
-        //Draw the ball
-		getBallSprite().draw(batcher);   
+		// Draw the bumpers
+		for (int i = 0; i < elements.size(); i++) {
+			if (elements.get(i) instanceof BumperElement) {
+				BumperElement bump = (BumperElement) elements.get(i);
+				bump.getSprite().draw(batcher);
+			}
+		}
+
+		// Draw the flippers
+		for (int i = 0; i < flippers.size(); i++) {
+			if (flippers.get(i) instanceof FlipperElement) {
+				FlipperElement flipper = (FlipperElement) flippers.get(i);
+				flipper.drawFlipper().draw(batcher);
+			}
+		}
+
+		// Draw the ball
+		getBallSprite().draw(batcher);
 
 		batcher.end();
 
-		//if the screen is touched, the ballbody will be accelerated(launched)
-    	List<Float> velocity = layout.getLaunchVelocity(); 
-    	
-    	if(Gdx.input.isTouched()){
-    		activateFlippers(flippers, true);
-    		sound.playFlipper();
-    	}
-    	else{
-    		activateFlippers(flippers, false);
-    	}
-    	
-    	
-    	if(isTouchable){
-			if(Gdx.input.isTouched()){
-				//check if the right bottom place of the screen is touched(ball start position)
-				if(Gdx.input.getX()>Gdx.graphics.getWidth()-85 && Gdx.input.getY()>Gdx.graphics.getHeight()-105){
-					ballBody.setLinearVelocity(new Vector2(velocity.get(0), velocity.get(1)));
+		// if the screen is touched, the ballbody will be accelerated(launched)
+		List<Float> velocity = layout.getLaunchVelocity();
+
+		if (Gdx.input.isTouched()) {
+			activateFlippers(flippers, true);
+			sound.playFlipper();
+		} else {
+			activateFlippers(flippers, false);
+		}
+
+		if (isTouchable) {
+			if (Gdx.input.isTouched()) {
+				// check if the right bottom place of the screen is touched(ball
+				// start position)
+				if (Gdx.input.getX() > Gdx.graphics.getWidth() - 85
+						&& Gdx.input.getY() > Gdx.graphics.getHeight() - 105) {
+					ballBody.setLinearVelocity(new Vector2(velocity.get(0),
+							velocity.get(1)));
 					isTouchable = false;
 					sound.playBall();
 				}
 			}
-    	}
-    	//if the ball is back in the launchpanel, isTochable=true that the user can launch the ball again
-    	if(ballBody.getPosition().x>45){
-    		isTouchable=true;
-    	}
-    	//check if ball is in "deadzone" position of ball < 0 in y screen axis
-        if(ballBody.getPosition().y < 0){
-        	state.doNextBall();
-        	if(state.isGameInProgress()){
-            	world.destroyBody(ballBody);
-        		setBall();
-        	}
-        	else{
-        		if(isInputDone==false){
-        		gameOver();
-        		sound.playGameover();
-        		}
-        	}
-        	isTouchable = true;
-        }
-   
+		}
+		// if the ball is back in the launchpanel, isTochable=true that the user
+		// can launch the ball again
+		if (ballBody.getPosition().x > 45) {
+			isTouchable = true;
+		}
+		// check if ball is in "deadzone" position of ball < 0 in y screen axis
+		if (ballBody.getPosition().y < 0) {
+			state.doNextBall();
+			if (state.isGameInProgress()) {
+				world.destroyBody(ballBody);
+				setBall();
+			} else {
+				if (isInputDone == false) {
+					gameOver();
+					sound.playGameover();
+				}
+			}
+			isTouchable = true;
+		}
+
 	}
 
 	public void activateFlippers(List flippers, boolean activated) {
@@ -287,35 +292,37 @@ public class GameArea implements Screen {
 		isTouchable = true;
 
 		scoreText = "score: 0";
-	    scoreFont = new BitmapFont(Gdx.files.internal("data/score.fnt"),false);
-	    scoreFont.setColor(Color.RED);
-	    
-        createBackgroundPhysic();
-        Physic.createCollisionListener(world);
-        
-        batcher = new SpriteBatch();
-        
-	    camera = new OrthographicCamera();
-        camera.viewportHeight = 900/10;  
-        camera.viewportWidth = 506/10;  
-        camera.position.set(camera.viewportWidth * .5f, camera.viewportHeight * .5f, 0f);  
-        camera.update();  
-        
-        layout = FieldLayout.layoutForLevel(level,world, !isOwnBoard);
-        
-        sound =  PinballSound.getInstance();
-        state = GameState.getInstance();
-        
-        state.setTotalBalls(layout.getNumberOfBalls());
-        createBackgroundSprite();
-        state.startNewGame();
-        sound.playStart();
-        setBall();
-        Gdx.input.getTextInput(new TextInputListener() {
+		scoreFont = new BitmapFont(Gdx.files.internal("data/score.fnt"), false);
+		scoreFont.setColor(Color.RED);
+
+		createBackgroundPhysic();
+		Physic.createCollisionListener(world);
+
+		batcher = new SpriteBatch();
+
+		camera = new OrthographicCamera();
+		camera.viewportHeight = 900 / 10;
+		camera.viewportWidth = 506 / 10;
+		camera.position.set(camera.viewportWidth * .5f,
+				camera.viewportHeight * .5f, 0f);
+		camera.update();
+
+		layout = FieldLayout.layoutForLevel(level, world, !isOwnBoard);
+
+		sound = PinballSound.getInstance();
+		state = GameState.getInstance();
+
+		state.setTotalBalls(layout.getNumberOfBalls());
+		createBackgroundSprite();
+		state.startNewGame();
+		sound.playStart();
+		setBall();
+		Gdx.input.getTextInput(new TextInputListener() {
 			public void input(String text) {
 				playername = text;
 			}
- 			public void canceled() {
+
+			public void canceled() {
 			}
 		}, "enter your name", "");
 	}
@@ -323,13 +330,13 @@ public class GameArea implements Screen {
 	@Override
 	public void hide() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	
+
 	private void gameOver() {
 		highscore = GameState.getInstance().getScore();
-		if (highscore != 0) highscoreCheck();
+		if (highscore != 0)
+			highscoreCheck();
 		isInputDone = true;
 		Gdx.app.log("gamestate: ", "GAMEOVER!!!");
 		Gdx.app.log("endscore: ", highscore + "");
@@ -338,8 +345,8 @@ public class GameArea implements Screen {
 
 	@org.junit.Test
 	public void highscoreCheck() {
-		String[][] arrays = new String[NUMBER_OF_HIGHSCORES+1][2];
-		
+		String[][] arrays = new String[NUMBER_OF_HIGHSCORES + 1][2];
+
 		try {
 			InputStream ips = fhin.read();
 			BufferedReader br = new BufferedReader(new InputStreamReader(ips));
@@ -352,22 +359,26 @@ public class GameArea implements Screen {
 				arrays[i][1] = values[1];
 			}
 			for (int k = 0; k < NUMBER_OF_HIGHSCORES; k++) {
-			long score = Long.parseLong(arrays[k+1][0]);
-			if (score > highscore.longValue()){
-				arrays[k][0] = arrays[k+1][0];
-				arrays[k][1] = arrays[k+1][1];
-			}
-			else {
-				arrays[k][0] = highscore.toString();
-				arrays[k][1] = playername;
-				break;
-			}
+				long score = Long.parseLong(arrays[k + 1][0]);
+				if (score > highscore.longValue()) {
+					arrays[k][0] = arrays[k + 1][0];
+					arrays[k][1] = arrays[k + 1][1];
+				} else {
+					arrays[k][0] = highscore.toString();
+					arrays[k][1] = playername;
+					break;
+				}
 
 			}
 			br.close();
 
-			System.out.println("New Highscore by " + playername + ": " + highscore +"!");
-			fhout.writeString(arrays[0][0]+ "," + arrays[0][1] + "\n" + arrays[1][0]+ "," + arrays[1][1] + "\n"+ arrays[2][0]+ "," + arrays[2][1] + "\n"+ arrays[3][0]+ "," + arrays[3][1] + "\n"+ arrays[4][0]+ "," + arrays[4][1] + "\n", false);
+			System.out.println("New Highscore by " + playername + ": "
+					+ highscore + "!");
+			fhout.writeString(arrays[0][0] + "," + arrays[0][1] + "\n"
+					+ arrays[1][0] + "," + arrays[1][1] + "\n" + arrays[2][0]
+					+ "," + arrays[2][1] + "\n" + arrays[3][0] + ","
+					+ arrays[3][1] + "\n" + arrays[4][0] + "," + arrays[4][1]
+					+ "\n", false);
 
 		} catch (Exception e) {
 			System.out.println(e.toString());

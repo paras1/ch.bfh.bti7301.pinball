@@ -19,9 +19,10 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 /**
- * This Class contains generic methods to draw the required elements(e.g. CircleShape for bumpers)
+ * This Class contains generic methods to draw the required elements(e.g.
+ * CircleShape for bumpers)
  * 
- *
+ * 
  * @author Dominik Reubi(reubd1@bfh.ch)
  * @version 1.0
  */

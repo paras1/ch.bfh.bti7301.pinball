@@ -45,8 +45,7 @@ public class Menu implements Screen {
 
 	@Override
 	public void render(float delta) {
-		// TODO Auto-generated method stub
-		// Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
+
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
 		// Hintergrundbild
@@ -57,7 +56,6 @@ public class Menu implements Screen {
 
 		stage.act(delta);
 		stage.draw();
-		// Table.drawDebug(stage);
 	}
 
 	@Override
@@ -68,7 +66,6 @@ public class Menu implements Screen {
 
 	@Override
 	public void show() {
-		// TODO Auto-generated method stub
 		stage = new Stage();
 		Gdx.input.setInputProcessor(stage);
 
@@ -88,8 +85,6 @@ public class Menu implements Screen {
 		startGameButton.addListener(new InputListener() {
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
-				// TODO Auto-generated method stub
-				// game.setScreen(new GameArea(game));
 				game.setScreen(new LevelScreen(game));
 
 				return true;
@@ -99,7 +94,6 @@ public class Menu implements Screen {
 		highscoreButton.addListener(new InputListener() {
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
-				// TODO Auto-generated method stub
 				game.setScreen(new HighscoreScreen(game));
 
 				return true;
@@ -111,7 +105,7 @@ public class Menu implements Screen {
 					int pointer, int button) {
 				EditorScreen editor = new EditorScreen(game);
 				game.setScreen(editor);
-				
+
 				return true;
 			}
 
@@ -124,32 +118,26 @@ public class Menu implements Screen {
 		table.row();
 		table.add(editorButton).width(350).height(150).padTop(50);
 
-
-		// stage.addActor(backImage);
 		stage.addActor(table);
 	}
 
 	@Override
 	public void hide() {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void pause() {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void resume() {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
 
 	}
 }
