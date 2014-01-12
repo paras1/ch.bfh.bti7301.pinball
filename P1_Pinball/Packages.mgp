@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PackageAnalysis>
+    <Package name="ch.bfh.bti7301.pinball" x="238" y="118">
+        <DependencyLink destination="ch.bfh.bti7301.pinball.elements"/>
+    </Package>
+    <Package name="ch.bfh.bti7301.pinball.elements" x="318" y="234">
+        <DependencyLink destination="ch.bfh.bti7301.pinball.screens"/>
+        <DependencyLink destination="ch.bfh.bti7301.pinball"/>
+    </Package>
+    <Package name="ch.bfh.bti7301.pinball.screens" x="482" y="114">
+        <DependencyLink destination="ch.bfh.bti7301.pinball"/>
+        <DependencyLink destination="ch.bfh.bti7301.pinball.elements"/>
+    </Package>
+    <Package name="ch.bfh.bti7301.pinball.util" x="636" y="233"/>
+</PackageAnalysis>

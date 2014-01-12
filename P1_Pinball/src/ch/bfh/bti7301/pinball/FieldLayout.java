@@ -15,6 +15,7 @@ import java.util.Random;
 
 import ch.bfh.bti7301.pinball.elements.FieldElement;
 import ch.bfh.bti7301.pinball.elements.FlipperElement;
+import ch.bfh.bti7301.pinball.util.JSONUtils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;

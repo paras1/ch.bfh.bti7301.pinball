@@ -60,8 +60,7 @@ public class GameArea implements Screen {
 	BitmapFont scoreFont;
 	String playername = "player1";
 	private boolean isInputDone = false;
-	private PinballSound sound;
-	private GameState state;
+
 
 	// things needed to draw
 	private SpriteBatch batcher;
@@ -197,7 +196,7 @@ public class GameArea implements Screen {
         batcher.begin();
         
         
-        scoreText = "Score: "+state.getScore();
+        scoreText = "Score: "+GameState.getInstance().getScore();
 
         //Draw the background
         backgroundSprite.draw(batcher);
@@ -239,7 +238,7 @@ public class GameArea implements Screen {
     	
     	if(Gdx.input.isTouched()){
     		activateFlippers(flippers, true);
-    		sound.playFlipper();
+    		PinballSound.getInstance().playFlipper();
     	}
     	else{
     		activateFlippers(flippers, false);
@@ -252,7 +251,7 @@ public class GameArea implements Screen {
 				if(Gdx.input.getX()>Gdx.graphics.getWidth()-85 && Gdx.input.getY()>Gdx.graphics.getHeight()-105){
 					ballBody.setLinearVelocity(new Vector2(velocity.get(0), velocity.get(1)));
 					isTouchable = false;
-					sound.playBall();
+					PinballSound.getInstance().playBall();
 				}
 			}
     	}
@@ -262,15 +261,15 @@ public class GameArea implements Screen {
     	}
     	//check if ball is in "deadzone" position of ball < 0 in y screen axis
         if(ballBody.getPosition().y < 0){
-        	state.doNextBall();
-        	if(state.isGameInProgress()){
+        	GameState.getInstance().doNextBall();
+        	if(GameState.getInstance().isGameInProgress()){
             	world.destroyBody(ballBody);
         		setBall();
         	}
         	else{
         		if(isInputDone==false){
         		gameOver();
-        		sound.playGameover();
+        		PinballSound.getInstance().playGameover();
         		}
         	}
         	isTouchable = true;
@@ -310,13 +309,11 @@ public class GameArea implements Screen {
         
         layout = FieldLayout.layoutForLevel(level,world, !isOwnBoard);
         
-        sound =  PinballSound.getInstance();
-        state = GameState.getInstance();
         
-        state.setTotalBalls(layout.getNumberOfBalls());
+        GameState.getInstance().setTotalBalls(layout.getNumberOfBalls());
         createBackgroundSprite();
-        state.startNewGame();
-        sound.playStart();
+        GameState.getInstance().startNewGame();
+        PinballSound.getInstance().playStart();
         setBall();
 //        debugRenderer = new Box2DDebugRenderer();
 	}

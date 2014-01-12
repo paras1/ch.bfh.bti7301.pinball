@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClassDiagram>
+    <CommunicationClass
+        name="ch.bfh.bti7301.pinball.elements.BumperElement" x="129" y="152">
+        <Communication destinationClassName="ch.bfh.bti7301.pinball.Physic"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="ch.bfh.bti7301.pinball.elements.FlipperElement" x="138" y="320">
+        <Communication destinationClassName="ch.bfh.bti7301.pinball.Physic"/>
+    </CommunicationClass>
+    <CommunicationClass name="ch.bfh.bti7301.pinball.screens.GameArea"
+        x="435" y="318">
+        <Association
+            destinationClassName="ch.bfh.bti7301.pinball.FieldLayout"
+            endpointName="layout" kind="Simple"/>
+        <Communication destinationClassName="ch.bfh.bti7301.pinball.elements.FlipperElement"/>
+        <Communication destinationClassName="ch.bfh.bti7301.pinball.FieldLayout"/>
+        <Communication destinationClassName="ch.bfh.bti7301.pinball.GameState"/>
+        <Communication destinationClassName="ch.bfh.bti7301.pinball.Physic"/>
+    </CommunicationClass>
+    <CommunicationClass name="ch.bfh.bti7301.pinball.FieldLayout"
+        x="674" y="319">
+        <Association
+            destinationClassName="ch.bfh.bti7301.pinball.elements.FlipperElement"
+            endpointName="flippers" kind="Simple"/>
+        <Communication destinationClassName="ch.bfh.bti7301.pinball.util.JSONUtils"/>
+    </CommunicationClass>
+    <CommunicationClass name="ch.bfh.bti7301.pinball.GameState" x="716" y="152"/>
+    <CommunicationClass
+        name="ch.bfh.bti7301.pinball.elements.SlingshotElement" x="273" y="37">
+        <Communication destinationClassName="ch.bfh.bti7301.pinball.Physic"/>
+    </CommunicationClass>
+    <CommunicationClass name="ch.bfh.bti7301.pinball.Physic" x="448" y="156">
+        <Association
+            destinationClassName="ch.bfh.bti7301.pinball.GameState"
+            endpointName="gameState" kind="Simple"/>
+        <Communication destinationClassName="ch.bfh.bti7301.pinball.GameState"/>
+    </CommunicationClass>
+    <CommunicationClass name="ch.bfh.bti7301.pinball.util.JSONUtils"
+        x="996" y="323"/>
+</ClassDiagram>
