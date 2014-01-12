@@ -165,23 +165,4 @@ public class FieldLayout {
 		return height;
 	}
 	
-	/** Returns the desired ratio between real world time and simulation time. The application should adjust the frame rate and/or 
-	 * time interval passed to Field.tick() to keep the ratio as close to this value as possible.
-	 */
-	public float getTargetTimeRatio() {
-		return targetTimeRatio;
-	}
-	
-	public String getDelegateClassName() {
-		return (String)allParameters.get("delegate");
-	}
-
-	/** Returns a value from the "values" map, used to store information independent of the FieldElements. 
-	 */
-	public Object getValueWithKey(String key) {
-		Map values = (Map)allParameters.get("values");
-		if (values==null) return null;
-		return values.get(key);
-	}
-	
 }
