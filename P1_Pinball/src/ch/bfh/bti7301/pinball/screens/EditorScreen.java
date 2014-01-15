@@ -27,11 +27,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 /**
- * The EditorScreen class is the View where you can choose one of your created
- * GameAreas for playing.
+ * The EditorScreen class is the view where you can choose the attributes for a
+ * new custom level (GameArea)
  * 
  * 
- * @author Sathesh Paramasamy (paras1@bfh.ch)
+ * @author Sathesh Paramasamy
  * @version 1.0
  */
 public class EditorScreen implements Screen {
@@ -57,10 +57,18 @@ public class EditorScreen implements Screen {
 
 	final String level = "";
 
+	/**
+	 * constructor
+	 * 
+	 * @param game
+	 */
 	public EditorScreen(PinballGame game) {
 		this.game = game;
 	}
 
+	/**
+	 * rendering the screen
+	 */
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
@@ -69,11 +77,17 @@ public class EditorScreen implements Screen {
 		stage.draw();
 	}
 
+	/**
+	 * resizes the view if changed
+	 */
 	public void resize(int width, int height) {
 		// resize the stage to the new window size
 		stage.setViewport(width, height, false);
 	}
 
+	/**
+	 * initiates the screen
+	 */
 	public void show() {
 		stage = new Stage();
 		Gdx.input.setInputProcessor(stage);
