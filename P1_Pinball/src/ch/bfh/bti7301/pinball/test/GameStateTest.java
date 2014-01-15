@@ -6,6 +6,12 @@ import org.junit.Test;
 
 import ch.bfh.bti7301.pinball.GameState;
 
+/**
+ * GameStateTest class
+ * 
+ * @author Dominik Reubi
+ * 
+ */
 public class GameStateTest {
 
 	@Test
@@ -26,27 +32,27 @@ public class GameStateTest {
 
 	@Test
 	public void testBalls() {
-		//before new game
+		// before new game
 		assertEquals(3, GameState.getInstance().getTotalBalls());
 		assertEquals(0, GameState.getInstance().getBallNumber());
 		assertFalse(GameState.getInstance().isGameInProgress());
- 
-		//start new game
+
+		// start new game
 		GameState.getInstance().startNewGame();
 		assertEquals(1, GameState.getInstance().getBallNumber());
 		assertTrue(GameState.getInstance().isGameInProgress());
- 
-		//second ball
+
+		// second ball
 		GameState.getInstance().doNextBall();
 		assertEquals(2, GameState.getInstance().getBallNumber());
 		assertTrue(GameState.getInstance().isGameInProgress());
- 
-		//third ball
+
+		// third ball
 		GameState.getInstance().doNextBall();
 		assertEquals(3, GameState.getInstance().getBallNumber());
 		assertTrue(GameState.getInstance().isGameInProgress());
- 
-		//game over
+
+		// game over
 		GameState.getInstance().doNextBall();
 		assertEquals(3, GameState.getInstance().getBallNumber());
 		assertFalse(GameState.getInstance().isGameInProgress());
