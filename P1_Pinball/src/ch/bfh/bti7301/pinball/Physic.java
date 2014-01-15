@@ -28,8 +28,6 @@ import com.badlogic.gdx.physics.box2d.World;
  */
 public class Physic {
 	
-	private static GameState gameState = GameState.getInstance();
-	
 	/** Creates a circle object with the given position and radius.
 	 */
 	public static Body createCircle(World world, float x, float y, float radius, boolean isStatic) {
@@ -42,10 +40,6 @@ public class Physic {
 		fdef.density = 0.5f;
 		fdef.friction = 0.1f;
 		fdef.restitution = 0.0f;
-
-		/*fdef.density = 0.7f;
-		fdef.friction = 0.3f;
-		fdef.restitution = 0.6f;*/
 		
 		BodyDef bd = new BodyDef();
 		bd.allowSleep = true;
@@ -88,6 +82,17 @@ public class Physic {
 	
 	}
 	
+	/**
+	 * creates a wall with the given parameters
+	 * @param world
+	 * @param xmin
+	 * @param ymin
+	 * @param xmax
+	 * @param ymax
+	 * @param angle
+	 * @param restitution
+	 * @return
+	 */
 	public static Body createWall (World world, float xmin, float ymin, float xmax, float ymax, float angle, float restitution) {
 		float cx = (xmin + xmax) / 2;
 		float cy = (ymin + ymax) / 2;
@@ -111,6 +116,11 @@ public class Physic {
 		return wall;
 	}
 	
+	/**
+	 * Creates the collisionListener for elements
+	 * it detects all collisions and initiates the action e.g. count the score
+	 * @param world
+	 */
     public static void createCollisionListener(World world) {
         world.setContactListener(new ContactListener() {
 	
@@ -123,7 +133,7 @@ public class Physic {
 							
 							BumperElement bElement = (BumperElement)fixtureB.getBody().getUserData();
 							Gdx.app.log("Score: ", bElement.getScore()+"");
-							gameState.addScore(bElement.getScore());
+							GameState.getInstance().addScore(bElement.getScore());
 						
 							bElement.handleCollision(fixtureA.getBody());
 						
@@ -132,7 +142,7 @@ public class Physic {
 							
 							BumperElement bElement = (BumperElement)fixtureA.getBody().getUserData();
 							Gdx.app.log("Score: ", bElement.getScore()+"");
-							gameState.addScore(bElement.getScore());							
+							GameState.getInstance().addScore(bElement.getScore());							
 
 							bElement.handleCollision(fixtureB.getBody());
 			
