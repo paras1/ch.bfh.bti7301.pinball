@@ -22,6 +22,10 @@ public class PinballSound {
 		loadSounds();
 	}
 
+	/**
+	 * Singlton getinstance
+	 * @return
+	 */
 	public static PinballSound getInstance() {
 		if (instance == null) {
 			instance = new PinballSound();
@@ -29,6 +33,9 @@ public class PinballSound {
 		return instance;
 	}
 
+	/**
+	 * Loading sounds from assets to gdx.audio
+	 */
 	private void loadSounds() {
 		mSoundPoolMap = new HashMap<Integer, Sound>();
 
@@ -47,10 +54,18 @@ public class PinballSound {
 				.internal("data/audio/GameOver.ogg")));
 	}
 
+	/**
+	 * Sound will be played everytime
+	 * @param enabled
+	 */
 	public void setSoundEnabled(boolean enabled) {
 		soundEnabled = enabled;
 	}
 
+	/**
+	 * Play sound listener, actionHandler
+	 * @param soundKey
+	 */
 	void playSound(int soundKey) {
 		if (soundEnabled && mSoundPoolMap != null) {
 			Sound sound = mSoundPoolMap.get(soundKey);
