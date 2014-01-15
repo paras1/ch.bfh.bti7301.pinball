@@ -22,7 +22,7 @@ import com.badlogic.gdx.physics.box2d.World;
  * ball when it hits. The impulse magnitude is controlled by the "kick"
  * parameter in the configuration map.
  * 
- * @author Dominik Reubi(reubd1@bfh.ch)
+ * @author Dominik Reubi
  * @version 1.0
  */
 public class BumperElement extends FieldElement {
@@ -53,11 +53,6 @@ public class BumperElement extends FieldElement {
 		pegBodySet = Collections.singletonList(pegBody);
 	}
 
-	@Override
-	public List<Body> getBodies() {
-		return pegBodySet;
-	}
-
 	Vector2 impulseForBall(Body ball) {
 		if (this.kick <= 0.01f)
 			return null;
@@ -80,25 +75,11 @@ public class BumperElement extends FieldElement {
 		PinballSound.getInstance().playBumpers();
 	}
 
-	// /*
-	// * This Method draws the bumper by calling drawBumper() and its
-	// corresponding physic by calling Phisic.createCircle
-	// * with the parameters x and y for the position and the radius
-	// */
-	// public void setBumpers(BumperElement bumper, Float posx, Float posy,
-	// Float radius) {
-	//
-	// HashMap userData = new HashMap();
-	// userData.put(bumper, drawBumper(posx, posy, radius));
-	//
-	//
-	// bumperBody = Physic.createCircle(world, posx, posy, radius, true);
-	// bumperBody.setBullet(true);
-	//
-	// bumperBody.setUserData(userData);
-	// // VPSoundpool.playBall();
-	// }
-
+	/**
+	 * This Method draws the bumper by calling drawBumper() and its
+	 * corresponding physic by calling Physic.createCircle with the parameters x
+	 * and y for the position and the radius
+	 */
 	public Sprite drawBumper(Float posx, Float posy, Float radius) {
 
 		pixmap = new Pixmap(256, 256, Pixmap.Format.RGBA8888);
@@ -122,6 +103,13 @@ public class BumperElement extends FieldElement {
 
 		return bumperSprite;
 
+	}
+
+	/**
+	 * getters
+	 */
+	public List<Body> getBodies() {
+		return pegBodySet;
 	}
 
 	public Sprite getSprite() {

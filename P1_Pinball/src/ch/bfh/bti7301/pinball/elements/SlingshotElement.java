@@ -18,7 +18,7 @@ import com.badlogic.gdx.physics.box2d.World;
  * to a ball when it hits. The impulse magnitude is controlled by the "kick"
  * parameter in the configuration map.
  * 
- * @author Dominik Reubi(reubd1@bfh.ch)
+ * @author Dominik Reubi
  * @version 1.0
  */
 public class SlingshotElement extends FieldElement {
@@ -30,6 +30,9 @@ public class SlingshotElement extends FieldElement {
 	float lx, ly;
 	float kick;
 
+	/**
+	 * create the slingshot line
+	 */
 	public void finishCreate(Map params, World world) {
 		List pos = (List) params.get("position");
 		List length = (List) params.get("length");
@@ -49,11 +52,12 @@ public class SlingshotElement extends FieldElement {
 		slingshotBodySet = Collections.singletonList(slingshotBody);
 	}
 
-	@Override
-	public List<Body> getBodies() {
-		return slingshotBodySet;
-	}
-
+	/**
+	 * set the impuls of the slingshot to the ball
+	 * 
+	 * @param ball
+	 * @return
+	 */
 	Vector2 impulseForBall(Body ball) {
 		if (this.kick <= 0.01f)
 			return null;
@@ -69,6 +73,11 @@ public class SlingshotElement extends FieldElement {
 		// return null;
 	}
 
+	/**
+	 * collison/actionhandler for the slingshot element
+	 * 
+	 * @param ball
+	 */
 	public void handleCollision(Body ball) {
 		Vector2 impulse = this.impulseForBall(ball);
 		if (impulse != null) {
@@ -77,4 +86,11 @@ public class SlingshotElement extends FieldElement {
 		PinballSound.getInstance().playSlingshot();
 	}
 
+	/**
+	 * getters
+	 */
+
+	public List<Body> getBodies() {
+		return slingshotBodySet;
+	}
 }

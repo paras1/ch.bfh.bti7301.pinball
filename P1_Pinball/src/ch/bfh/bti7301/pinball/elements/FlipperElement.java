@@ -20,6 +20,13 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 
+/**
+ * This FieldElement subclass represents a flipperpair that applies to rotate up
+ * and downward to hit the ball and sent it back to the top of the gamearea.
+ * 
+ * @author Sathesh Paramasamy
+ * 
+ */
 public class FlipperElement extends FieldElement {
 
 	Body flipperBody;
@@ -37,6 +44,9 @@ public class FlipperElement extends FieldElement {
 	float minangle, maxangle;
 	float cx, cy;
 
+	/**
+	 * final creater of the complex element type flipper
+	 */
 	public void finishCreate(Map params, World world) {
 		List pos = (List) params.get("position");
 
@@ -78,10 +88,35 @@ public class FlipperElement extends FieldElement {
 
 		drawFlipper();
 
-		// flipperBodySet = (List<Body>) Collections.singleton(flipperBody);
 		this.setEffectiveSpeed(-this.downspeed); // force flipper to bottom when
 													// field is first created
 	}
+
+	public boolean shouldCallTick() {
+		return true;
+	}
+
+	/**
+	 * activate the flipper on the screen
+	 * 
+	 * @param area
+	 */
+	public void tick(GameArea area) {
+
+		// if angle is at maximum, reduce speed so that the ball won't fly off
+		// when it hits
+		if (getEffectivSpeed() > 0.5f) {
+			float topAngle = (isReversed()) ? jointDef.lowerAngle
+					: jointDef.upperAngle;
+			if (Math.abs(topAngle - joint.getJointAngle()) < 0.05) {
+				setEffectiveSpeed(0.5f);
+			}
+		}
+	}
+
+	/**
+	 * getters & setters
+	 */
 
 	/**
 	 * Returns true if the flipper rotates around its right end, which requires
@@ -114,30 +149,6 @@ public class FlipperElement extends FieldElement {
 		return flipperBodySet;
 	}
 
-	public boolean shouldCallTick() {
-		return true;
-	}
-
-	// Zum Aktivieren der Flippers, muesste die Gamearea od. FieldElement
-	// (jenachdem wie es geloest wird) mitgegeben werden und mit dem
-	// ContactListener (ist das Interface welches die tick(Gamearea area)
-	// Methode enthaelt verbunden
-
-	public void tick(GameArea area) {
-		// super.tick(area); Zu beachten, tick(GameArea area) Methode muss noch
-		// implementiert werden)
-
-		// if angle is at maximum, reduce speed so that the ball won't fly off
-		// when it hits
-		if (getEffectivSpeed() > 0.5f) {
-			float topAngle = (isReversed()) ? jointDef.lowerAngle
-					: jointDef.upperAngle;
-			if (Math.abs(topAngle - joint.getJointAngle()) < 0.05) {
-				setEffectiveSpeed(0.5f);
-			}
-		}
-	}
-
 	public boolean isFlipperActivated() {
 		return getEffectivSpeed() > 0;
 	}
@@ -166,16 +177,14 @@ public class FlipperElement extends FieldElement {
 	public Sprite drawFlipper() {
 		pixmap = new Pixmap(16, 16, Pixmap.Format.RGBA8888);
 		texture = new Texture(pixmap);
-		// draw a yellow circle
+		// draw a yellow rectangle
 		pixmap.setColor(1, 1, 0, 1);
 		pixmap.fillRectangle(0, 0, 18, 2);
-		// pixmap.fillCircle(256/2,256/2,256/2);
 
 		texture.draw(pixmap, 0, 0);
 		texture.bind();
 
 		flipperSprite = new Sprite(texture);
-		// flipperSprite.setPosition(cx, cy);
 		flipperSprite.setSize(9f, 7f);
 
 		flipperSprite.setOrigin(flipperSprite.getWidth() / 2,

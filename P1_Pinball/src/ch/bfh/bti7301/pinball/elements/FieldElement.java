@@ -10,7 +10,7 @@ import com.badlogic.gdx.physics.box2d.World;
  * Abstract superclass of all elements in the pinball field, such as bumpers and
  * flippers.
  * 
- * @author Dominik Reubi(reubd1@bfh.ch)
+ * @author Dominik Reubi
  * @version 1.0
  */
 public abstract class FieldElement {
