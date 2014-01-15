@@ -5,6 +5,12 @@ import java.util.HashMap;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 
+/**
+ * Soundplayer Class
+ * 
+ * @author Dominik Reubi
+ *
+ */
 public class PinballSound {
 
 	private static HashMap<Integer, Sound> mSoundPoolMap;
