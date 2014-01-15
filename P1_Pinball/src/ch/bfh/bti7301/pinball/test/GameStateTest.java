@@ -1,4 +1,4 @@
-package tests;
+package ch.bfh.bti7301.pinball.test;
 
 import static org.junit.Assert.*;
 
