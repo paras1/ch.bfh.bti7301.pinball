@@ -18,9 +18,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 /**
  * The Menu class is the entry point of the game and draws a table with three
  * buttons to start the game, view highscore or edit gamearea.
- * 
- * 
- * @author Dominik Reubi(reubd1@bfh.ch)
+ *  
+ * @author Dominik Reubi
  * @version 1.0
  */
 public class Menu implements Screen {
@@ -39,11 +38,17 @@ public class Menu implements Screen {
 	int width = Gdx.graphics.getWidth();
 	int height = Gdx.graphics.getHeight();
 
+	/**
+	 * constructor
+	 * @param game
+	 */
 	public Menu(PinballGame game) {
 		this.game = game;
 	}
 
-	@Override
+	/**
+	 * renders the screen
+	 */
 	public void render(float delta) {
 
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
@@ -64,7 +69,9 @@ public class Menu implements Screen {
 		stage.setViewport(width, height, false);
 	}
 
-	@Override
+	/**
+	 * initiates the screen
+	 */
 	public void show() {
 		stage = new Stage();
 		Gdx.input.setInputProcessor(stage);

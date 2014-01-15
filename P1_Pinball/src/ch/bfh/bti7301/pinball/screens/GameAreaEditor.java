@@ -52,8 +52,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 
 /**
- * This Class draws the GameAreaEditor
- * 
+ * This class is the view of GameAreaEditor
  * 
  * @author Sathesh Paramasamy
  * @version 1.0
@@ -103,12 +102,20 @@ public class GameAreaEditor implements Screen {
 
 	private Dialog dialog;
 
-	// constructor to keep a reference to the main Game class
+	/**
+	 * constructor to keep a reference to the main Game class
+	 * 
+	 * @param game
+	 * @param level
+	 */
 	public GameAreaEditor(PinballGame game, String level) {
 		this.game = game;
 		this.level = level;
 	}
 
+	/**
+	 * declares and creates the physics for the background pinballbody.json
+	 */
 	private void createBackgroundPhysic() {
 		// Create a loader for the file saved from the editor.
 		BodyEditorLoader loader = new BodyEditorLoader(
@@ -131,6 +138,9 @@ public class GameAreaEditor implements Screen {
 		loader.attachFixture(backgroundModel, "gamearea", fd, BACKGROUND_WIDTH);
 	}
 
+	/**
+	 * creates the body background sprite
+	 */
 	private void createBackgroundSprite() {
 		backgroundTexture = new Texture(
 				Gdx.files.internal("data/Pinball_Background.png"));
@@ -171,26 +181,24 @@ public class GameAreaEditor implements Screen {
 		return ballSprite;
 	}
 
-	@Override
 	public void dispose() {
 		// dispose any object you created to free up the memory
 		backgroundTexture.dispose();
 		batcher.dispose();
 	}
 
-	@Override
 	public void resize(int width, int height) {
 	}
 
-	@Override
 	public void pause() {
 	}
 
-	@Override
 	public void resume() {
 	}
 
-	@Override
+	/**
+	 * renders the screen
+	 */
 	public void render(float delta) {
 		//
 		GL10 gl = Gdx.gl10;
@@ -295,7 +303,9 @@ public class GameAreaEditor implements Screen {
 
 	}
 
-	@Override
+	/**
+	 * initiates the screen
+	 */
 	public void show() {
 		stage = new Stage();
 		Gdx.input.setInputProcessor(stage);
@@ -373,11 +383,18 @@ public class GameAreaEditor implements Screen {
 		stage.addActor(table);
 	}
 
-	@Override
 	public void hide() {
 
 	}
 
+	/**
+	 * needed to draw the actual dynamical bumper which should be setted
+	 * 
+	 * @param posx
+	 * @param posy
+	 * @param radius
+	 * @return
+	 */
 	public Sprite drawBumper(Float posx, Float posy, Float radius) {
 
 		pixmap = new Pixmap(256, 256, Pixmap.Format.RGBA8888);

@@ -1,27 +1,13 @@
 package ch.bfh.bti7301.pinball.screens;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.Iterator;
-import java.util.TreeMap;
-import java.util.NavigableMap;
-import java.awt.*;
-
-import javax.swing.*;
 
 import ch.bfh.bti7301.pinball.Assets;
-import ch.bfh.bti7301.pinball.screens.GameArea;
-import ch.bfh.bti7301.pinball.screens.HighscoreScreen;
-import ch.bfh.bti7301.pinball.screens.PinballGame;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
@@ -34,6 +20,11 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
+/**
+ * Highscore screen class
+ * @author Olivier Dueggelin
+ *
+ */
 public class HighscoreScreen implements Screen {
 	Stage stage;
 	PinballGame game;
@@ -48,9 +39,11 @@ public class HighscoreScreen implements Screen {
 	String[][] arrays = new String[NUMBER_OF_HIGHSCORES + 1][2];
 	private FileHandle fhin = Gdx.files.internal("data/highscorelist.txt");
 	TextButton MenuButton;
-//	TextField title = "Highscore";
 
-	// constructor to keep a reference to the main Game class
+	/**
+	 * constructor to keep a reference to the main Game class
+	 * @param game
+	 */
 	public HighscoreScreen(PinballGame game) {
 		this.game = game;
 	}
@@ -72,7 +65,10 @@ public class HighscoreScreen implements Screen {
 			System.out.println(e.toString());
 		}
 	}
-	@Override
+	
+	/**
+	 * renders the screen
+	 */
 	public void render(float delta) {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
@@ -86,13 +82,14 @@ public class HighscoreScreen implements Screen {
 		stage.draw();
 	}
 
-	@Override
 	public void resize(int width, int height) {
 		// resize the stage to the new window size
 		stage.setViewport(width, height, false);
 	}
 
-	@Override
+	/**
+	 * initiates the screen
+	 */
 	public void show() {
 		ReadFile();
 		stage = new Stage();

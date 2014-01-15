@@ -21,7 +21,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
  * The LevelScreen class is the View where you can choose one of your created
  * GameAreas for playing.
  * 
- * 
  * @author Dominik Reubi(reubd1@bfh.ch)
  * @version 1.0
  */
@@ -40,11 +39,17 @@ public class LevelScreen implements Screen {
 	int width = Gdx.graphics.getWidth();
 	int height = Gdx.graphics.getHeight();
 
+	/**
+	 * constructor
+	 * @param game
+	 */
 	public LevelScreen(PinballGame game) {
 		this.game = game;
 	}
 
-	@Override
+	/**
+	 * renders the screen
+	 */
 	public void render(float delta) {
 
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
@@ -65,7 +70,9 @@ public class LevelScreen implements Screen {
 		stage.setViewport(width, height, false);
 	}
 
-	@Override
+	/**
+	 * initiates the screen
+	 */
 	public void show() {
 		stage = new Stage();
 		Gdx.input.setInputProcessor(stage);
