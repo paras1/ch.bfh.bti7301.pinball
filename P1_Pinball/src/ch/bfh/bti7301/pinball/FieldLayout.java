@@ -36,11 +36,42 @@ public class FieldLayout {
 	Random randomno = new Random();
 	float random = randomno.nextFloat();
 
-	// check next float value
+	List<FieldElement> fieldElements = new ArrayList<FieldElement>();
+	List<FlipperElement> flippers;
+	float width;
+	float height;
+	List<Integer> ballColor;
+	float targetTimeRatio;
+	Map allParameters;
 
-	// random = random.nextFloat();
-	// System.out.println("Next float value: ");
+	static List<Integer> DEFAULT_BALL_COLOR = Arrays.asList(255, 0, 0);
 
+	/**
+	 * Constructor of FieldLayout
+	 * 
+	 * @param layoutMap
+	 * @param world
+	 */
+	public FieldLayout(Map layoutMap, World world) {
+		this.width = asFloat(layoutMap.get("width"), 20.0f);
+		this.height = asFloat(layoutMap.get("height"), 30.0f);
+		this.ballColor = (layoutMap.containsKey("ballcolor")) ? (List<Integer>) layoutMap
+				.get("ballcolor") : DEFAULT_BALL_COLOR;
+		this.allParameters = layoutMap;
+
+		flippers = addFieldElements(layoutMap, "flippers",
+				FlipperElement.class, world);
+
+		addFieldElements(layoutMap, "elements", null, world);
+	}
+
+	/**
+	 * JSON map getter and reader
+	 * 
+	 * @param name
+	 * @param isGame
+	 * @return
+	 */
 	public static Map readFieldLayout(String name, boolean isGame) {
 		try {
 			String assetPath = "tables/" + name;
@@ -69,6 +100,14 @@ public class FieldLayout {
 		}
 	}
 
+	/**
+	 * creates the level layout for the gamefield (GameArea)
+	 * 
+	 * @param name
+	 * @param world
+	 * @param isGame
+	 * @return
+	 */
 	public static FieldLayout layoutForLevel(String name, World world,
 			boolean isGame) {
 		Map levelLayout = _layoutMap.get(name);
@@ -79,22 +118,28 @@ public class FieldLayout {
 		return new FieldLayout(levelLayout, world);
 	}
 
-	List<FieldElement> fieldElements = new ArrayList<FieldElement>();
-	List<FlipperElement> flippers;
-	float width;
-	float height;
-	List<Integer> ballColor;
-	float targetTimeRatio;
-	Map allParameters;
-
-	static List<Integer> DEFAULT_BALL_COLOR = Arrays.asList(255, 0, 0);
-
+	/**
+	 * list of a map for key
+	 * 
+	 * @param map
+	 * @param key
+	 * @return
+	 */
 	static List listForKey(Map map, String key) {
 		if (map.containsKey(key))
 			return (List) map.get(key);
 		return Collections.EMPTY_LIST;
 	}
 
+	/**
+	 * adding the elements in the JSON object (map)
+	 * 
+	 * @param layoutMap
+	 * @param key
+	 * @param defaultClass
+	 * @param world
+	 * @return
+	 */
 	public List addFieldElements(Map layoutMap, String key, Class defaultClass,
 			World world) {
 		List elements = new ArrayList();
@@ -110,21 +155,13 @@ public class FieldLayout {
 		return elements;
 	}
 
+	/**
+	 * getters
+	 * 
+	 * @return
+	 */
 	public List<FieldElement> getFieldElements() {
 		return fieldElements;
-	}
-
-	public FieldLayout(Map layoutMap, World world) {
-		this.width = asFloat(layoutMap.get("width"), 20.0f);
-		this.height = asFloat(layoutMap.get("height"), 30.0f);
-		this.ballColor = (layoutMap.containsKey("ballcolor")) ? (List<Integer>) layoutMap
-				.get("ballcolor") : DEFAULT_BALL_COLOR;
-		this.allParameters = layoutMap;
-
-		flippers = addFieldElements(layoutMap, "flippers",
-				FlipperElement.class, world);
-
-		addFieldElements(layoutMap, "elements", null, world);
 	}
 
 	public List<FlipperElement> getFlipperElements() {

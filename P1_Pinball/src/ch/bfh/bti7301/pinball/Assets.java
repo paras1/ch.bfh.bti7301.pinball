@@ -3,8 +3,9 @@ package ch.bfh.bti7301.pinball;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
-/*
+/**
  * This class loads some assets like the skin for the menu buttons
+ * 
  * @author Dominik Reubi(reubd1@bfh.ch)
  * @version 1.0
  */

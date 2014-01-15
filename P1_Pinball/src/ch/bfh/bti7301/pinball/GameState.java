@@ -1,5 +1,11 @@
 package ch.bfh.bti7301.pinball;
 
+/**
+ * Singletonclass for handling the gamestate
+ * 
+ * @author Dominik Reubi
+ * 
+ */
 public class GameState {
 
 	private static GameState instance = null;
@@ -18,6 +24,9 @@ public class GameState {
 		return instance;
 	}
 
+	/**
+	 * getter & setter & configs
+	 */
 	public void startNewGame() {
 		score = 0;
 		ballNumber = 1;
@@ -35,8 +44,6 @@ public class GameState {
 	public void addScore(long points) {
 		score += points;
 	}
-
-	// Getters and Setters
 
 	public boolean isGameInProgress() {
 		return gameInProgress;

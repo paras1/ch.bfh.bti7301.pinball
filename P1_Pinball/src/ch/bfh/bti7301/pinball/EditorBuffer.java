@@ -12,6 +12,12 @@ import org.json.JSONObject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
+/**
+ * This is the Model class of the Editor function
+ * 
+ * @author Sathesh Paramasamy
+ * 
+ */
 public class EditorBuffer {
 
 	private Map mpNewBoardBuffer = new HashMap();
@@ -31,6 +37,11 @@ public class EditorBuffer {
 
 	private static EditorBuffer instance = null;
 
+	/**
+	 * singleton instance returner
+	 * 
+	 * @return
+	 */
 	public static EditorBuffer getInstance() {
 		if (instance == null) {
 			instance = new EditorBuffer();
@@ -38,6 +49,11 @@ public class EditorBuffer {
 		return instance;
 	}
 
+	/**
+	 * getters & setters
+	 * 
+	 * @return
+	 */
 	public Map getMpNewBoardBuffer() {
 		return mpNewBoardBuffer;
 	}
@@ -174,6 +190,9 @@ public class EditorBuffer {
 		this.actualBumperPoints = actualBumperPoints;
 	}
 
+	/**
+	 * JSONFile Writer for the editor
+	 */
 	public void JSONWriter() {
 
 		JSONObject jsob = new JSONObject(getMpNewBoardBuffer());

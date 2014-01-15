@@ -6,10 +6,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 
 /**
- * Soundplayer Class
+ * Soundplayer class
  * 
  * @author Dominik Reubi
- *
+ * 
  */
 public class PinballSound {
 
@@ -30,6 +30,7 @@ public class PinballSound {
 
 	/**
 	 * Singlton getinstance
+	 * 
 	 * @return
 	 */
 	public static PinballSound getInstance() {
@@ -62,6 +63,7 @@ public class PinballSound {
 
 	/**
 	 * Sound will be played everytime
+	 * 
 	 * @param enabled
 	 */
 	public void setSoundEnabled(boolean enabled) {
@@ -70,6 +72,7 @@ public class PinballSound {
 
 	/**
 	 * Play sound listener, actionHandler
+	 * 
 	 * @param soundKey
 	 */
 	void playSound(int soundKey) {
